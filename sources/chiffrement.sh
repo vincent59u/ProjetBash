@@ -11,7 +11,7 @@ function render_mdp()
 	exec 3>&-
 }
 
-if [ -d $1 ]; then
+if [ $# = 0 && -d $1 ]; then
 	#Si le dossier existe, on affiche la boite de dialogue de saisie du mot de passe
 	render_mdp
 	#Si la saisie s'est bien passé
