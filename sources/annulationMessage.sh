@@ -4,8 +4,8 @@
 DIALOG=${DIALOG=dialog}
 
 #Personnalisation de la fenêtre
-$DIALOG --title "Erreur..." \
-        --msgbox "$1" 10 30
+$DIALOG --title "Annulation" \
+	--msgbox "$1" 10 30
 
 #Switch sur le choix de l'utilisateur
 case $? in

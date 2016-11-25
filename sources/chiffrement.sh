@@ -11,21 +11,25 @@ function render_mdp()
 	exec 3>&-
 }
 
-if [ $# = 0 && -d $1 ]; then
-	#Si le dossier existe, on affiche la boite de dialogue de saisie du mot de passe
-	render_mdp
-	#Si la saisie s'est bien passé
-	if [ $exit_code = 0 ]; then
-		#Chriffrage du dossier de backup
-		gpg --yes --batch --passphrase="$mdp" -c $1
-		#On supprime le dossier de base pour plus de sécurité
-		rmdir $1
-		bash succesMessage.sh "Le dossier a été chiffré avec succès"
-	else
-		#Sinon on affiche un message d'erreur
-		bash erreurMessage.sh "Il y a eu un probléme lors de la saisie du mot de passe"
-	fi
+if [ $# = 0 ]; then
+	bash erreurMessage.sh "Aucun dossier n'a été placé en paramètre"
 else
-	#Sinon on affiche le message d'erreur concernant l'existance du fichier
-	bash erreurMessage.sh "Le fichier placé en paramètre n'existe pas"
+	if [ -d $1 ]; then
+		#Si le dossier existe, on affiche la boite de dialogue de saisie du mot de passe
+		render_mdp
+		#Si la saisie s'est bien passé
+		if [ $exit_code = 0 ]; then
+			#Chriffrage du dossier de backup
+			gpg --yes --batch --passphrase="$mdp" -c $1
+			#On supprime le dossier de base pour plus de sécurité
+			rmdir $1
+			bash succesMessage.sh "Le dossier a été chiffré avec succès"
+		else
+			#Sinon on affiche un message d'erreur
+			bash erreurMessage.sh "Il y a eu un probléme lors de la saisie du mot de passe"
+		fi
+	else
+		#Sinon on affiche le message d'erreur concernant l'existance du fichier
+		bash erreurMessage.sh "Le fichier placé en paramètre n'existe pas"
+	fi
 fi
