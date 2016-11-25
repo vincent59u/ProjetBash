@@ -9,6 +9,7 @@ $DIALOG --title "Annulation" \
 
 #Switch sur le choix de l'utilisateur
 case $? in
-        0)      exit;;
+        0)      #Relance le main pour que l'utilisateur continu la navigation dans l'application
+		bash main.sh;;
         255)    echo "Appuyé sur Echap. ";;
 esac

@@ -9,6 +9,6 @@ $DIALOG --title "Erreur..." \
 
 #Switch sur le choix de l'utilisateur
 case $? in
-        0)      exit;;
+        0)      bash main.sh
         255)    echo "Appuyé sur Echap. ";;
 esac

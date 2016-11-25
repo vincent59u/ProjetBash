@@ -9,6 +9,6 @@ $DIALOG --title "Succès!" --clear \
 
 #Switch sur l'option choisi par l'utilisateur
 case $? in
-	0)	exit;;
+	0)	bash main.sh
 	255)	echo "Appuyé sur Echap. ";;
 esac
