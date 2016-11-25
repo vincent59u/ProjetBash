@@ -7,7 +7,9 @@ function backup(){
 	if [ ! -d "$2" ]; then 
 		mkdir "$2" #créer le dossier $2 si il n'existe pas
 	fi 
-	cat "$1" | xargs -I{} cp {} $2 #attention, fichier .conf copié dans le nouveau dossier
+	DIR=$2/`date +%s`
+	mkdir $DIR #créer un dossier de backup à la date (timestamp) actuel
+	cat "$1" | xargs -I{} cp {} $DIR 
 }
 
 if [ -z "$*" ]; then #si aucun paramètre : noms par défault
