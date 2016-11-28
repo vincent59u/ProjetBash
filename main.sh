@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#Importation des scripts utilisés
+source sources/message.sh
+
 #Création de la fenêtre de dialogue
 DIALOG=${DIALOG=dialog}
 
@@ -48,10 +51,10 @@ case $option in
 				echo "\"$fichier\" choisi";;
 			1)
 				#On affiche le message d'annulation à l'utilisateur
-				bash sources/annulationMessage.sh "L'opération a bien été annulée";;
+				affiche_message "Annulation" "L'opération a bien été annulée";;
 			255)
 				#On affiche le message d'annulation à l'utilisateur
-				bash sources/annulationMessage.sh "L'opération à bien été annulée";;
+				affiche_message "Annulation" "L'opération à bien été annulée";;
 		esac
 	fi;;
 #Option Annuler

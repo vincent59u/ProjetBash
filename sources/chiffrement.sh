@@ -1,6 +1,9 @@
 #!/bin/bash
 #Programme qui permet de chiffrer le dossier qui est placé en paramètre
 
+#Importation des scripts utilisés
+source message.sh
+
 dossier=$1
 
 function render_mdp()
@@ -12,7 +15,7 @@ function render_mdp()
 }
 
 if [ $# = 0 ]; then
-	bash erreurMessage.sh "Aucun dossier n'a été placé en paramètre"
+	affiche_message "Erreur..." "Aucun dossier n'a été placé en paramètre"
 else
 	if [ -d $1 ]; then
 		#Si le dossier existe, on affiche la boite de dialogue de saisie du mot de passe
@@ -23,13 +26,13 @@ else
 			gpg --yes --batch --passphrase="$mdp" -c $1
 			#On supprime le dossier de base pour plus de sécurité
 			rmdir $1
-			bash succesMessage.sh "Le dossier a été chiffré avec succès"
+			affiche_message "Succès!" "Le dossier a été chiffré avec succès"
 		else
 			#Sinon on affiche un message d'erreur
-			bash erreurMessage.sh "Il y a eu un probléme lors de la saisie du mot de passe"
+			affiche_message "Erreur..." "Il y a eu un probléme lors de la saisie du mot de passe"
 		fi
 	else
 		#Sinon on affiche le message d'erreur concernant l'existance du fichier
-		bash erreurMessage.sh "Le fichier placé en paramètre n'existe pas"
+		affiche_message "Erreur..." "Le fichier placé en paramètre n'existe pas"
 	fi
 fi
