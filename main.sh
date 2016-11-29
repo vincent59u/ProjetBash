@@ -2,6 +2,7 @@
 
 #Importation des scripts utilisés
 source sources/message.sh
+source sources/backup.sh
 
 #Création de la fenêtre de dialogue
 DIALOG=${DIALOG=dialog}
@@ -13,7 +14,7 @@ function render_selection(){
 
 #Fonction qui permet à l'utilisateur de saisir le nom de son fichier de confugration
 function render_saisie(){
-	saisie=`$DIALOG --title "Saisir un nom de fichier" --clear --inputbox "Veuillez saisir le nom de votre fichier de configuration :" 16 31`
+	saisie=`$DIALOG --stdout --title "Saisir un nom de fichier" --inputbox "Veuillez saisir le nom de votre fichier de configuration :" 10 62`
 }
 
 #Création d'un fichier temporaire qui permet de stockage de l'option choisi par l'utilisateur
@@ -38,9 +39,9 @@ case $option in
 	if [ "$choix" == "Configuration" ]; then
 		#Demander le nom du fichier
 		render_saisie
-		fichierconf=${$?.conf}
+		fichierconf=$saisie.conf
 		#Remplir le fichier aves les nom des fichiers et / ou dossiers à sauvegarder
-		echo $choix
+		echo $fichierconf
 	elif [ "$choix" == "Backup" ]; then
 		#Appel d'une boite de dialogue pour choisir le fichier de configuration
 		render_selection
@@ -48,7 +49,7 @@ case $option in
 		case $? in
 			0)
 				#Appeler le .sh de backup avec le fichier de configuration en paramètre
-				echo "\"$fichier\" choisi";;
+				backup $fichier;;
 			1)
 				#On affiche le message d'annulation à l'utilisateur
 				affiche_message "Annulation" "L'opération a bien été annulée";;
