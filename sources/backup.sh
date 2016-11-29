@@ -1,16 +1,27 @@
 #!/bin/bash
 
-# --conf backup.conf
-# --backupdir /var/backups
+#importation des scripts utilisés
+source chiffrement.sh
 
 function backup(){
 	if [ ! -d "$2" ]; then
-		mkdir "$2" #créer le dossier $2 si il n'existe pas
+		#créer le dossier $2 si il n'existe pas
+		mkdir "$2" 
 	fi
 	DIR=$2/`date +%s`
-	mkdir $DIR #créer un dossier de backup à la date (timestamp) actuel
+	#créer un dossier de backup à la date (timestamp) actuel
+	mkdir $DIR 
+	#copier les fichiers dans le dossier
 	cat "$1" | xargs -I{} cp {} $DIR
+	#chiffrement du dossier
+	chiffrement $DIR
+	DIR=${DIR}.gpg
+	#compression du dossier et suppression du dossier non compressé
+	compression $DIR
+	rm -d $DIR
 }
+
+### bash backup.sh --conf backup.conf --backupdir /var/backups ###
 
 #on récupère les noms du fichier et du dossier de backup ; si ils n'existent pas on utilise ceux par défault
 NOM="backup.conf"
@@ -26,7 +37,3 @@ for i in $(seq 1 $#); do
 done
 
 backup $NOM $DIR
-
-#Commentaires : chercher les possibles bugs
-
-
