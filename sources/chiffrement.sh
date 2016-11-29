@@ -4,8 +4,6 @@
 #Importation des scripts utilisés
 source message.sh
 
-dossier=$1
-
 function render_mdp()
 {
  	exec 3>&1
@@ -14,6 +12,8 @@ function render_mdp()
 	exec 3>&-
 }
 
+function chiffrement()
+{
 if [ $# = 0 ]; then
 	affiche_message "Erreur..." "Aucun dossier n'a été placé en paramètre"
 else
@@ -36,3 +36,4 @@ else
 		affiche_message "Erreur..." "Le fichier placé en paramètre n'existe pas"
 	fi
 fi
+}
