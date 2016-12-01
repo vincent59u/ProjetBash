@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #importation des scripts utilisés
-source chiffrement.sh
+source sources/chiffrement.sh
+source sources/compression.sh
 
 function backup(){
 	if [ ! -d "$2" ]; then
@@ -14,13 +15,14 @@ function backup(){
 	#copier les fichiers dans le dossier
 	cat "$1" | xargs -I{} cp {} $DIR
 	#chiffrement du dossier
-	chiffrement $DIR
+	chiffrement "$DIR"
 	DIR=${DIR}.gpg
 	#compression du dossier et suppression du dossier non compressé
-	compression $DIR
+	compression "$DIR"
 	rm -d $DIR
 }
 
+function AVirer(){
 ### bash backup.sh --conf backup.conf --backupdir /var/backups ###
 
 #on récupère les noms du fichier et du dossier de backup ; si ils n'existent pas on utilise ceux par défault
@@ -37,3 +39,4 @@ for i in $(seq 1 $#); do
 done
 
 backup $NOM $DIR
+}

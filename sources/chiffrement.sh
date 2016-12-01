@@ -2,7 +2,7 @@
 #Programme qui permet de chiffrer le dossier qui est placé en paramètre
 
 #Importation des scripts utilisés
-source message.sh
+source sources/message.sh
 
 function render_mdp()
 {
@@ -32,8 +32,8 @@ else
 			affiche_message "Erreur..." "Il y a eu un probléme lors de la saisie du mot de passe"
 		fi
 	else
-		#Sinon on affiche le message d'erreur concernant l'existance du fichier
-		affiche_message "Erreur..." "Le fichier placé en paramètre n'existe pas"
+		#Sinon on affiche le message d'erreur concernant l'inexistance du dossier
+		affiche_message "Erreur..." "Le dossier placé en paramètre n'existe pas"
 	fi
 fi
 }
