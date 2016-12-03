@@ -10,6 +10,7 @@
 #######################################################################################################################################################
 source SOURCES/chiffrement.sh
 source SOURCES/compression.sh
+source SOURCES/supprimerAnciensBackups.sh
 source GUI/fenetre.sh
 
 #######################################################################################################################################################
@@ -29,6 +30,8 @@ function backup(){
 	done
 	#compression du dossier de backup. Une fois le dossier compressé, la version non-compressé sera supprimer par le programme.
 	compression "$DIR"
+	#On regarde si le nombre de backups est supérieur à 100. On supprime le plus ancien backup le cas échéant
+	supprimerAnciensBackups
 	#On indique à l'utilisateur si l opération s est bien déroulée ou non
 	if [ $? -eq 0 ]; then
 		affiche_message "Succès" "Le dossier de backup a été correctement fait."

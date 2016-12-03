@@ -11,11 +11,11 @@
 DIALOG=${DIALOG=dialog}
 
 ######################################################################################################################################################
-#			Fonction qui affiche la fenêtre de dialogue qui permet la sélection du fichier de configuration				     #
+#				Fonction qui affiche la fenêtre de dialogue qui permet la sélection de fichier   				     #
 ######################################################################################################################################################
-
-function affiche_selectionFichierConf(){
-        fichier=`$DIALOG --stdout --title "Choisissez le fichier de configuration" --fselect $HOME/ 14 48`
+#Cette fonction prends deux paramètres qui sont le titre de la fenêtre et le fichier de départ
+function affiche_selectionFichier(){
+        fichier=`$DIALOG --stdout --title "$1" --fselect "$2"/ 14 48`
 }
 
 ######################################################################################################################################################
