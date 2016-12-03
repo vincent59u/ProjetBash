@@ -8,8 +8,7 @@
 #######################################################################################################################################################
 #								Importation des scripts utilisés						      #
 #######################################################################################################################################################
-source sources/message.sh
-source sources/backup.sh
+source SOURCES/backup.sh
 source GUI/fenetre.sh
 
 #######################################################################################################################################################
@@ -44,12 +43,24 @@ case $option in
 0)	#Bloc if qui permet de trouver l option sélectionnée par l utilisateur
 	if [ "$choix" == "Backup" ]; then
 		#Appel d'une boite de dialogue pour choisir le fichier de configuration
-		affiche_selectionFichier
+		affiche_selectionFichierConf
 		#Switch sur le retour de la fenêtre de dialog
 		case $? in
 			0)
-				#Appel du script qui permet de faire de backup avec le fichier de configuration en placé paramètre
-				backup $fichier;;
+				#Vérification que le fichier choisi soit un fichier et qu il se termine par l'extension .conf
+				if [ -f $fichier ]; then
+					#On teste que l extension du fichier soit bien .conf (fichier de configuration)
+					regex="^.+(.conf)$"
+					if [[ "$fichier" =~ $regex ]]; then
+						#Appel du script qui permet de faire de backup avec le fichier de configuration en placé paramètre
+						backup $fichier
+					else
+						affiche_message "Erreur..." "Le fichier sélectionné n'est pas un fichier de configuration. (extension .conf)"
+					fi
+				else
+					#On indique a l utilisateur que le fichier n est pas correct
+					affiche_message "Erreur..." "Vous avez choisis un dossier et non un fichier de configuration ou bien le fichier sélectionné n'existe pas."
+				fi;;
 			1)
 				#On affiche le message d annulation à l utilisateur si il choisit l'option Annuler
 				affiche_message "Annulation" "L'opération a bien été annulée";;

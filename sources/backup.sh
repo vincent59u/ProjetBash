@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# @author Lauren, Matthieu, Benjamin
+# @author Laurene, Matthieu, Benjamin
 
 #Programme qui permet la création de backups
 #Prends en paramètre le fichier de configuration qui permet au programme de savoir quels fichier sauvegarder
@@ -10,24 +10,29 @@
 #######################################################################################################################################################
 source SOURCES/chiffrement.sh
 source SOURCES/compression.sh
+source GUI/fenetre.sh
 
 #######################################################################################################################################################
 #                                            Fonction qui crée, chiffre et compresse un dossier de backup                                             #
 #######################################################################################################################################################
 function backup(){
-	if [ ! -d "$2" ]; then
-		#créer le dossier $2 si il n'existe pas
-		mkdir "$2"
-	fi
-	DIR=$2/`date +%s`
-	#créer un dossier de backup à la date (timestamp) actuel
+	#On crée le dossier qui contiendra les fichiers et les dossiers sauvegarder. Tous les backups auront un nom du même type (Backup + timestamp)
+	DIR=/var/backups/Backup_`date +%s`
+	#créer un dossier de backup dans le répertoire /var/backup
 	mkdir $DIR
-	#copier les fichiers dans le dossier
-	cat "$1" | xargs -I{} cp {} $DIR
-	#chiffrement du dossier
-	chiffrement "$DIR"
-	DIR=${DIR}.gpg
-	#compression du dossier et suppression du dossier non compressé
+	#On copie le dossier de backup l ensembles des fichier ou dossier indiqué dans le fichier de configuration
+	for ligne in $(cat $1); do
+		#Chiffrement de chaque fichiers avant de le copier dans le dossier de backup
+		chiffrement $ligne
+		#On déplace le fichier crypté dans le dossier de backup
+		mv ${ligne}.gpg $DIR
+	done
+	#compression du dossier de backup. Une fois le dossier compressé, la version non-compressé sera supprimer par le programme.
 	compression "$DIR"
-	rm -d $DIR
+	#On indique à l'utilisateur si l opération s est bien déroulée ou non
+	if [ $? -eq 0 ]; then
+		affiche_message "Succès" "Le dossier de backup a été correctement fait."
+	else
+		affiche_message "Erreur..." "Une erreur est survenue lors de la création du dossier de backup, veuillez recommancer l'opération."
+	fi
 }

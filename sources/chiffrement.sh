@@ -15,13 +15,14 @@ source GUI/fenetre.sh
 #######################################################################################################################################################
 function chiffrement(){
 	if [ $# = 0 ]; then
-		affiche_message "Erreur..." "Aucun dossier n'a été placé en paramètre"
+		affiche_message "Erreur..." "Aucun dossier ou fichier n'a été placé en paramètre"
 	else
-		if [ -d $1 ]; then
+		if [[ -d $1 || -f $1 ]]; then
 			#Si le dossier existe, il faut le chiffrer avec la clé de l'utilisateur
+			gpg --encrypt $1
 		else
 			#Sinon on affiche le message d erreur concernant l inexistance du dossier
-			affiche_message "Erreur..." "Le dossier placé en paramètre n'existe pas"
+			affiche_message "Erreur..." "Le dossier ou le fichier placé en paramètre n'existe pas"
 		fi
 	fi
 }
