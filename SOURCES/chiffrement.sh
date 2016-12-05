@@ -19,7 +19,7 @@ function chiffrement(){
 	else
 		if [[ -d $1 || -f $1 ]]; then
 			#Si le dossier existe, il faut le chiffrer avec la clé de l'utilisateur
-			gpg --encrypt -r "Matthieu" $1
+			gpg --encrypt --default-recipient-self $1
 		else
 			#Sinon on affiche le message d erreur concernant l inexistance du dossier
 			affiche_message "Erreur..." "Le dossier ou le fichier placé en paramètre n'existe pas"
