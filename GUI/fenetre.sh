@@ -21,9 +21,9 @@ function affiche_selectionFichier(){
 ######################################################################################################################################################
 #                       		Fonction qui affiche une fenêtre d'information (Ok comme seule choix)  		                             #
 ######################################################################################################################################################
-
+#Cette fonction permet d afficher un message à l utilisateur. $1 correspond au titre et $2 correspond au corps du message
 function affiche_message(){
-        DIALOG=${DIALOG=dialog}
+	DIALOG=${DIALOG=dialog}
 
         #Personnalisation de la fenêtre
         $DIALOG --title "$1" \
@@ -37,3 +37,10 @@ function affiche_message(){
 	esac
 }
 
+######################################################################################################################################################
+#                                       Fonction qui affiche une fenêtre qui permet la saisie d'informations                                         #
+######################################################################################################################################################
+#Cette fonction permet d'afficher une fenêtre de saisie de texte. $1 correspond au titre et $2 correspond a l indication donné à l utilisateur
+function affiche_saisie(){
+	saisie=`$DIALOG --stdout --title "$1" --clear --inputbox "$2" 16 51`
+}
