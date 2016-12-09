@@ -8,14 +8,15 @@
 #######################################################################################################################################################
 #                        Fonction qui supprime automatiquement les plus anciens backups lorsqu'il y en a plus de 100                                  #
 #######################################################################################################################################################
+#Fonction qui permet de supprimer progressivement les anciens backups. $1 correspond au dossier qui contient les backups.
 function supprimerAnciensBackups(){
 	#On compte (wc -l) ici le nombre de fichier (param f)
-       	nbfichier=$(find /var/backups/ -type f | wc -l )
+       	nbfichier=$(find $1 -type f | wc -l )
         #S'il y a plus de 100 dossier de backups dans /var/backups/
         if [ $nbfichier -gt 100 ]; then
                 #On cherche le plus ancien
-                suppr=$(ls /var/backups/ -tr1 | head -n 1)
+                suppr=$(ls $1 -tr1 | head -n 1)
                 #On le supprime
-                rm /var/backups/$suppr
+                rm $1/$suppr
         fi
 }
