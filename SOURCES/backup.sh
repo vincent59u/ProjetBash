@@ -17,6 +17,7 @@ source GUI/fenetre.sh
 #                                            Fonction qui crée, chiffre et compresse un dossier de backup                                             #
 #######################################################################################################################################################
 function backup(){
+	chemin=$PWD
 	#Appel d'une fonction qui permet à l utilisateur de saisir un nom de dossier dans une boite de dialogue
         affiche_saisie_backup "Saisir un nom de dossier" "Veulliez saisir le nom de dossier de votre backup. (Laissez vide pour /var/backups)"
 	#Si l'utilisateur à appuyer sur annuler ou echap.
@@ -41,6 +42,7 @@ function backup(){
 		compression "$DIR"
 		#On regarde si le nombre de backups est supérieur à 100. On supprime le plus ancien backup le cas échéant
 		supprimerAnciensBackups
+		cd $chemin
 		#On indique à l'utilisateur si l opération s est bien déroulée ou non
 		if [ $? -eq 0 ]; then
 			affiche_message "Succès" "Le dossier de backup a été correctement créé."
