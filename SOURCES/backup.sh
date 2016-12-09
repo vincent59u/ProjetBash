@@ -34,14 +34,14 @@ function backup(){
 		#On copie le dossier de backup l ensembles des fichier ou dossier indiqué dans le fichier de configuration
 		for ligne in $(cat $1); do
 			#Chiffrement de chaque fichiers avant de le copier dans le dossier de backup
-			chiffrement $ligne
+			chiffrement "$ligne"
 			#On déplace le fichier crypté dans le dossier de backup
 			mv ${ligne}.gpg $DIR
 		done
 		#compression du dossier de backup. Une fois le dossier compressé, la version non-compressé sera supprimée par le programme.
 		compression "$DIR"
 		#On regarde si le nombre de backups est supérieur à 100. On supprime le plus ancien backup le cas échéant
-		supprimerAnciensBackups
+		supprimerAnciensBackups "$saisie"
 		cd $chemin
 		#On indique à l'utilisateur si l opération s est bien déroulée ou non
 		if [ $? -eq 0 ]; then

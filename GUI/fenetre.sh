@@ -76,11 +76,11 @@ function affiche_saisie_mail(){
 	regex="^([A-Za-z0-9]+([._-]{0,1}[A-Za-z0-9]+)*)+@([A-Za-z0-9.-]+\.[A-Za-z]{2,6})$"
         saisie=`$DIALOG --stdout --title "$1" --clear --inputbox "$2" 16 51`
         retour=$?
-	#On boucle tant que l'utilisateur ne saisi pas son nom
-        while [[ -z "$saisie" && ! "$retour" -eq 1 || ! "$saisie" =~ $regex ]]; do
-                affiche_saisie_mail "Veuillez recommencer" "Vous n'avez soit, pas écrit d'adresse mail, soit l'adresse mail entrée n'est pas au bon format. Ex : toto@toto.fr"
+	#On boucle tant que l'utilisateur ne saisi pas son mail
+	while [[ -z "$saisie" || ! "$saisie" =~ $regex ]] && [[ ! $retour -eq 1 ]]; do
+		affiche_saisie_mail "Veuillez recommencer" "Vous n'avez soit, pas écrit d'adresse mail, soit l'adresse mail entrée n'est pas au bon format. Ex : toto@toto.fr"
                 retour=$?
-        done
+	done
         #Si l'utilisateur a appuyé sur annuler, on quitte la fonction de backup
         if [ $retour -eq 1 ]; then
             affiche_message "Annulation" "L'opération a bien été annulée"
@@ -94,7 +94,7 @@ function affiche_saisie_mail(){
 function affiche_saisie_mdp(){
         saisie=`$DIALOG --stdout --title "$1" --clear --passwordbox "$2" 16 51`
         retour=$?
-	#On boucle tant que l'utilisateur ne saisi pas son nom
+	#On boucle tant que l'utilisateur ne saisi pas son mot de passe
         while [[ -z "$saisie" && ! "$retour" -eq 1 ]]; do
                 affiche_saisie_mdp "$1" "$2"
                 retour=$?

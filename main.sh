@@ -42,20 +42,51 @@ choix=`cat $fichtemp`
 #######################################################################################################################################################
 #Fonction qui lance le processus qui permet de faire un dossier chiffré, compressé d'un backup
 function lancer_backup(){
-	#Vérification que le fichier choisi soit un fichier et qu il se termine par l'extension .conf
-        if [ -f $1 ]; then
-        #On teste que l extension du fichier soit bien .conf (fichier de configuration)
-  	      regex="^.+(.conf)$"
-              if [[ "$1" =~ $regex ]]; then
-             	 #Appel du script qui permet de faire de backup avec le fichier de configuration en placé paramètre
-                 backup $1
-              else
-                 affiche_message "Erreur..." "Le fichier sélectionné n'est pas un fichier de configuration. (extension .conf)"
-              fi
-        else
-              #On indique a l utilisateur que le fichier n est pas correct
-              affiche_message "Erreur..." "Vous avez choisis un dossier et non un fichier de configuration ou bien le fichier sélectionné n'existe pas."
-        fi
+	#On vérifie que l'utilisateur n a pas appuyer sur annuler, sinon on lui affiche un message d annulation
+	if [ ! $? -eq 1 ]; then
+		#Vérification que le fichier choisi soit un fichier et qu il se termine par l'extension .conf
+        	if [ -f $1 ]; then
+        	#On teste que l extension du fichier soit bien .conf (fichier de configuration)
+  	        	regex="^.+(.conf)$"
+              		if [[ "$1" =~ $regex ]]; then
+             			 #Appel du script qui permet de faire de backup avec le fichier de configuration en placé paramètre
+                		 backup $1
+              		else
+                		 affiche_message "Erreur..." "Le fichier sélectionné n'est pas un fichier de configuration. (extension .conf)"
+              		fi
+        	else
+        	      	#On indique a l utilisateur que le fichier n est pas correct
+              		affiche_message "Erreur..." "Vous avez choisis un dossier et non un fichier de configuration ou bien le fichier sélectionné n'existe pas."
+        	fi
+	else
+		#On indique a l utilisateur le message d'annulation
+           	affiche_message "Annulation" "L'opération a bien été annulée."
+	fi
+}
+
+#Fonction qui permet de créer une clef de chiffrement si l'utilisateur en a aucune.
+function creationClef(){
+	#Appel de la fenêtre de dialog qui permet de saisir son nom.
+       	affiche_saisie "Saisir votre nom" "Veuillez saisir votre nom complet. Ex : Jacques DURANT"
+       	#On affecte la valeur saisie à la variable nom.
+        nom=$saisie
+	#Suite de if qui test à chaque fois que l'opération du dessus s est bien passé afin de quitté le programme sans probleme si l utilisateur appuie sur annuler
+	if [ ! $retour -eq 1 ]; then
+        	#Appel de la fenêtre de dialog qui permet de saisir son mail.
+        	affiche_saisie_mail "Saisir votre e-mail" "Veuillez saisir votre adresse mail. Ex : toto@toto.fr"
+        	#On affecte la valeur saisie à la variable nom.
+        	mail=$saisie
+        	if [ ! $retour -eq 1 ]; then
+ 			#Appel de la fenêtre de dialog qui permet de saisir son mot de passe.
+        		affiche_saisie_mdp "Saisir un mot de passe" "Veuillez saisir un mot de passe qui permettra de protéger votre clef."
+        		#On affecte la valeur saisie à la variable nom.
+        		mdp=$saisie
+        		if [ ! $retour -eq 1 ]; then
+				#On crée une clef avec les informations donnée par l'utilisateur.
+        			creerClef "$nom" "$mail" "$mdp"
+			fi
+		fi
+	fi
 }
 
 #######################################################################################################################################################
@@ -70,26 +101,17 @@ case $option in
 		case $? in
 			0)
 				#Avant de lancer un backup, on s'assure que l utilisateur à une clef de chiffrement. Si c est pas le cas on lui en crée.
-				if [ /!\ Faire condition qui test si il y a déjà une clef /!\ ]; then
-					#Appel de la fenêtre de dialog qui permet de saisir son nom.
-					affiche_saisie "Saisir votre nom" "Veuillez saisir votre nom complet. Ex : Jacques DURANT"
-					#On affecte la valeur saisie à la variable nom.
-					nom=$saisie
-					#Appel de la fenêtre de dialog qui permet de saisir son mail.
-                                        affiche_saisie_mail "Saisir votre e-mail" "Veuillez saisir votre adresse mail. Ex : toto@toto.fr"
-                                        #On affecte la valeur saisie à la variable nom.
-                                        mail=$saisie
-					#Appel de la fenêtre de dialog qui permet de saisir son mot de passe.
-                                        affiche_saisie_mdp "Saisir un mot de passe" "Veuillez saisir un mot de passe qui permettra de protéger votre clef."
-                                        #On affecte la valeur saisie à la variable nom.
-                                        mdp=$saisie
-					#On crée une clef avec les informations donnée par l'utilisateur.
-					creerClef "$nom" "$mail" "$mdp"
+				#Pour ce test, on regarde si le fichier contenant les clefs privés est vide ou non.
+				if [ ! -s /home/user/.gnupg/secring.gpg ]; then
+					creationClef
 				fi
-				#Appel d'une boite de dialogue pour choisir le fichier de configuration
-		                affiche_selectionFichier "Choisissez le fichier de configuration" "$HOME"
-				#On lance le processus qui permet de faire un backup
-				lancer_backup "$fichier";;
+				#Si la création de la clef s'est bien passé, on peut créer un backup.
+				if [ ! $retour -eq 1 ]; then
+					#Appel d'une boite de dialogue pour choisir le fichier de configuration
+		                	affiche_selectionFichier "Choisissez le fichier de configuration" "$HOME"
+					#On lance le processus qui permet de faire un backup
+					lancer_backup "$fichier"
+				fi;;
 			1)
 				#On affiche le message d annulation à l utilisateur si il choisit l'option Annuler
 				affiche_message "Annulation" "L'opération a bien été annulée";;

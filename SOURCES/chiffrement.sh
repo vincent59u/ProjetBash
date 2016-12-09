@@ -15,15 +15,6 @@ source SOURCES/interruption.sh
 #######################################################################################################################################################
 #                                               Fonction qui vérifie si l'utilisateur possède déjà une clef                                           #
 #######################################################################################################################################################
-#fonction qui permet de vérifier si l'utilisateur qui utilise ce script possède une clef de chiffrement
-function verifierClef(){
-	#Faire la function qui vérifie si l utilisateur possède une clef
-	>&- 2>&-
-}
-
-#######################################################################################################################################################
-#                                               Fonction qui vérifie si l'utilisateur possède déjà une clef                                           #
-#######################################################################################################################################################
 #fonction qui permet de créer une clef de chiffrement à l'utilisateur. $1 correspond au nom de la personne
 #								       $2 correspond à l'adresse mail de la personne
 #								       $3 corrspond au mot de passe de l'utilisateur
@@ -50,9 +41,11 @@ cat >conf <<EOF
 EOF
 	#On crée la clef en mode batch avec les options du fichier de configuration placé en paramètre
 	gpg --batch --gen-key conf >&- 2>&-
-	#On importe les deux clef (piblique et privé) au trousseau de l'utilisateur
+	#On importe les deux clef (publique et privé) au trousseau de l'utilisateur
 	gpg --import clef.pub >&- 2>&-
 	gpg --import clef.sec >&- 2>&-
+	#On arrête le trapping de l'interruption
+	#trap - ctrl_c INT
 	#On supprime le fichier de configuration et les deux clefs créer pour un gain de place évident
 	rm conf clef.pub clef.sec
 	#Affiche du message de succès
@@ -63,11 +56,13 @@ EOF
 #                                                       Fonction qui permet de chiffrer le dossier de backup                                          #
 #######################################################################################################################################################
 function chiffrement(){
-        if [ $# = 0 ]; then
+        #Si aucun fichier ou dossier n'es placé en paramètre, on affiche un message d erreur
+	if [ $# = 0 ]; then
                 affiche_message "Erreur..." "Aucun dossier ou fichier n'a été placé en paramètre"
         else
+		#Si le dossier ou le fichier placé en paramètre existe, on le chiffe
                 if [[ -d $1 || -f $1 ]]; then
-                        #Si le dossier existe, il faut le chiffrer avec la clé de l'utilisateur
+                        #Si le dossier ou le fichier existe, il faut le chiffrer avec la clé de l'utilisateur
                         gpg --encrypt --default-recipient-self $1
                 else
                         #Sinon on affiche le message d erreur concernant l inexistance du dossier
