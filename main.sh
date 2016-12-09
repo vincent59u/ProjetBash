@@ -9,6 +9,7 @@
 #								Importation des scripts utilisés						      #
 #######################################################################################################################################################
 source SOURCES/backup.sh
+source SOURCES/chiffrement.sh
 source GUI/fenetre.sh
 
 #######################################################################################################################################################
@@ -65,11 +66,28 @@ case $option in
 0)	#Bloc if qui permet de trouver l option sélectionnée par l utilisateur
 	#L utilisateur souhaite faire un backup
 	if [ "$choix" == "Backup" ]; then
-		#Appel d'une boite de dialogue pour choisir le fichier de configuration
-		affiche_selectionFichier "Choisissez le fichier de configuration" "$HOME"
 		#Switch sur le retour de la fenêtre de dialog
 		case $? in
 			0)
+				#Avant de lancer un backup, on s'assure que l utilisateur à une clef de chiffrement. Si c est pas le cas on lui en crée.
+				if [ /!\ Faire condition qui test si il y a déjà une clef /!\ ]; then
+					#Appel de la fenêtre de dialog qui permet de saisir son nom.
+					affiche_saisie "Saisir votre nom" "Veuillez saisir votre nom complet. Ex : Jacques DURANT"
+					#On affecte la valeur saisie à la variable nom.
+					nom=$saisie
+					#Appel de la fenêtre de dialog qui permet de saisir son mail.
+                                        affiche_saisie_mail "Saisir votre e-mail" "Veuillez saisir votre adresse mail. Ex : toto@toto.fr"
+                                        #On affecte la valeur saisie à la variable nom.
+                                        mail=$saisie
+					#Appel de la fenêtre de dialog qui permet de saisir son mot de passe.
+                                        affiche_saisie_mdp "Saisir un mot de passe" "Veuillez saisir un mot de passe qui permettra de protéger votre clef."
+                                        #On affecte la valeur saisie à la variable nom.
+                                        mdp=$saisie
+					#On crée une clef avec les informations donnée par l'utilisateur.
+					creerClef "$nom" "$mail" "$mdp"
+				fi
+				#Appel d'une boite de dialogue pour choisir le fichier de configuration
+		                affiche_selectionFichier "Choisissez le fichier de configuration" "$HOME"
 				#On lance le processus qui permet de faire un backup
 				lancer_backup "$fichier";;
 			1)
@@ -85,7 +103,9 @@ case $option in
 		affiche_selectionFichier "Choisissez un fichier de backup à comparer" "/var/backups"
 	fi;;
 #Option Annuler
-1) 	echo "Au revoir..";;
+1) 	#clear
+	echo "Au revoir..";;
 #Option Echap
-255) 	echo "Au revoir..";;
+255) 	#clear
+	echo "Au revoir..";;
 esac
