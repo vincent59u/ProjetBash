@@ -100,6 +100,8 @@ case $option in
 		#Switch sur le retour de la fenêtre de dialog
 		case $? in
 			0)
+				#On initialise la variable retour à 0 afin que le programme s'execute lorsque l utilisateur possède déjà une clef.
+				retour=0
 				#Avant de lancer un backup, on s'assure que l utilisateur à une clef de chiffrement. Si c est pas le cas on lui en crée.
 				#Pour ce test, on regarde si le fichier contenant les clefs privés est vide ou non.
 				if [ ! -s /home/user/.gnupg/secring.gpg ]; then
