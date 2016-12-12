@@ -103,8 +103,11 @@ case $option in
 				#On initialise la variable retour à 0 afin que le programme s'execute lorsque l utilisateur possède déjà une clef.
 				retour=0
 				#Avant de lancer un backup, on s'assure que l utilisateur à une clef de chiffrement. Si c est pas le cas on lui en crée.
-				#Pour ce test, on regarde si le fichier contenant les clefs privés est vide ou non.
-				if [ ! -s /home/user/.gnupg/secring.gpg ]; then
+				#Pour ce test, on compte le nombre de lignes que la commande de listage de clef retourne
+				`gpg --list-secret-key` > clef.txt
+				nombreLigne=$(wc -l < "clef.txt")
+				rm clef.txt
+				if [ $nombreLigne -lt 1 ]; then
 					creationClef
 				fi
 				#Si la création de la clef s'est bien passé, on peut créer un backup.

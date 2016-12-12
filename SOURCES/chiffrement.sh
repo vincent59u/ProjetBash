@@ -45,7 +45,7 @@ EOF
 	gpg --import clef.pub >&- 2>&-
 	gpg --import clef.sec >&- 2>&-
 	#On arrête le trapping de l'interruption
-	#trap - ctrl_c INT
+	trap "" INT
 	#On supprime le fichier de configuration et les deux clefs créer pour un gain de place évident
 	rm conf clef.pub clef.sec
 	#Affiche du message de succès

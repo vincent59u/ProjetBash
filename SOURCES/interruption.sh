@@ -13,6 +13,8 @@ source GUI/fenetre.sh
 #######################################################################################################################################################
 #Si l'utilisateur appuye sur ctr+c, on fait le traitement suivant.
 function ctrl_c() {
-        affiche_message_info "Vous avez quitté" "Vous venez de quitter le programme de génération de clef de chiffrement.\n\n Merci de lancer la commande suivante en tant que root : rm /dev/random && ln -s /dev/urandom /dev/random.\n\n Cette commande permet de générer de l'entropie.\n\n Rééssayez ensuite."
+        #On supprime les fichiers temporaires qui ont été créer avant l'interruption
+	rm conf clef.sec clef.pub >&- 2>&-
+	affiche_message_info "Vous avez quitté" "Vous venez de quitter le programme de génération de clef de chiffrement.\n\n Merci de lancer la commande suivante en tant que root : rm /dev/random && ln -s /dev/urandom /dev/random.\n\n Cette commande permet de générer de l'entropie.\n\n Rééssayez ensuite."
 	exit
 }
