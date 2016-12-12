@@ -104,10 +104,8 @@ case $option in
 				retour=0
 				#Avant de lancer un backup, on s'assure que l utilisateur à une clef de chiffrement. Si c est pas le cas on lui en crée.
 				#Pour ce test, on compte le nombre de lignes que la commande de listage de clef retourne
-				`gpg --list-secret-key` > clef.txt
-				nombreLigne=$(wc -l < "clef.txt")
-				rm clef.txt
-				if [ $nombreLigne -lt 1 ]; then
+				clef=`gpg --list-secret-key`
+				if [ -z "$clef" ]; then
 					creationClef
 				fi
 				#Si la création de la clef s'est bien passé, on peut créer un backup.
