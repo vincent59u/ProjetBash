@@ -25,13 +25,22 @@ function extraireFichier(){
 		#Si l'utilisateur a bien appuyé sur Accepter et non Annuler
 		if [ $? -eq 0 ]; then
 			#On choisit la destination ( pour éviter qu'il ecrase un fichier existant )
-			affiche_saisie "Choisir chemin pour votre fichier" "Chemin"
+			affiche_saisie "Choisir chemin pour votre fichier" "Chemin" 
 			#S'il a choisit Accepter
 			if [ $? -eq 0 ]; then
 				destination=($saisie)
 				#On decompresse le fichier choisi de l'archive choisi dans la destination choisi ( Beaucoup de choisi n est pas ? )
-				`tar xfvz $fichier $dossier"/"$fich.gpg -C $destination`
+                                tar xfvz $fichier -C $destination $dossier"/"$fich.gpg >&- 2>&- 
+				#On se déplace ver le dossier
+				cd $destination"/"$dossier
+				#On decrypte le fichier
+				gpg --decrypt -q $fich.gpg 1 >&- 2>&-
+				#On le deplace dans le destination afin de pouvoir supprimer le dossier parent 
+				mv $destination"/"$dossier"/"$fich "../"$destination"/"$dossier"/"$fich 2>/dev/null
+				rm -r $destination"/"$dossier
 			fi
 		fi
 	fi
 }
+
+extraireFichier
