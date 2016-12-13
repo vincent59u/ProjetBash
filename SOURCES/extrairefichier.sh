@@ -34,10 +34,10 @@ function extraireFichier(){
 				#On se déplace ver le dossier
 				cd $destination"/"$dossier
 				#On decrypte le fichier
-				gpg --decrypt -q $fich.gpg 1 >&- 2>&-
+				gpg --output $fich --decrypt -q $fich.gpg 
 				#On le deplace dans le destination afin de pouvoir supprimer le dossier parent 
-				mv $destination"/"$dossier"/"$fich "../"$destination"/"$dossier"/"$fich 2>/dev/null
-				rm -r $destination"/"$dossier
+				mv $fich ../$fich 2>/dev/null
+				#rm -I $dossier
 			fi
 		fi
 	fi
