@@ -37,5 +37,3 @@ function difference(){
 	#On supprime le fichier temporaire
 	rm tmp.txt
 }
-
-difference $1 $2

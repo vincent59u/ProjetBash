@@ -11,6 +11,7 @@
 source SOURCES/backup.sh
 source SOURCES/chiffrement.sh
 source SOURCES/difference.sh
+source SOURCES/extrairefichier.sh
 source GUI/fenetre.sh
 
 #######################################################################################################################################################
@@ -27,7 +28,8 @@ trap "rm -f $fichtemp" 0 1 2 5 15
 $DIALOG --clear --title "Programme de backups de Laurene, Benjamin et Matthieu" \
 	--menu "Bonjour, ce programme premet la gestion automatique de backups, sécurisé, et permet la récupération d’anciens fichiers, avec possibilité de récupérer des fichiers mis à jour depuis internet de façon sécurisée, tolérant les erreurs. Veuillez choisir une opération à effectuer parmi les options suivantes :" 50 80 8 \
 	"Backup" "Faire un backup des fichiers et les envoyer sur le serveur" \
-	"Comparer" "Comparer deux backups (différences entre ajout et suppression)" 2> $fichtemp
+	"Comparer" "Comparer deux backups (différences entre ajout et suppression)" \
+	"Récuperer" "Récuperer un fichier ou un dossier d'un backup" 2> $fichtemp
 
 #######################################################################################################################################################
 #                                                               Récupération des options séléctionnées                                                #
@@ -128,6 +130,10 @@ case $option in
 	elif [ "$choix" == "Comparer" ]; then
 		#On ouvre deux fenêtres de selection de fichier afin que l utilisateur choisise deux backups différents afin de faire la différence
 		affiche_selectionFichier "Choisissez un fichier de backup à comparer" "/var/backups"
+	#L'utilisateur souhaite récuperer un dossier ou un fichier dans un backup.
+	elif [ "$choix" == "Récuperer" ]; then
+		#On appel la fonction d'extraction de fichier ou dossier.
+		extraireFichier
 	fi;;
 #Option Annuler
 1) 	#clear
