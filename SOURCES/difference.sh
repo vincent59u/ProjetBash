@@ -18,7 +18,7 @@ function difference(){
 	#on récupère dans une variable le résultat de la commande ci-dessus.
 	resultat=`cat tmp.txt`
 	#Si la variable est vide, cela veut dire qu il y a aucune différence entre les deux backups.
-	if [ -z $resultat ]; then
+	if [ -z "$resultat" ]; then
 		echo "Il n'y a aucune différence entre ces deux backups"
 	else
 		#On boucle sur chaque ligne du fichier tmp.txt

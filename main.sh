@@ -92,6 +92,30 @@ function creationClef(){
 	fi
 }
 
+#Fonction qui permet de récuperer deux chemins de backups afin de faire la différence entre eux
+function faireDifference(){
+	#Ouvre une première fenetre qui permet de selectionner le premier backup
+       	affiche_selectionFichier "Choisissez le premier backup qui sera comparer" "/var/backups"
+        backup1=$fichier
+        	#Si l'utilisateur a accepter, on continue
+                if [ ! $? -eq 1 ]; then
+                        #Ouvre une deuxième fenêtre qui permet de selectionner le deuxième backup
+                        affiche_selectionFichier "Choisissez le deuxième backup qui sera comparer" "/var/backups"
+                        backup2=$fichier
+                        #Si l'utilisateur a accepter, on continue
+                        if [ ! $? -eq 1 ]; then
+                                #On teste que les deux backups existe (pour pas que l'utilisateur entre un faux chemin). Option -f car un tar.gz (Tous les backups) est consideré co$
+                                if [[ -f "$backup1" && -f "$backup2" ]]; then
+                                        #On fait la différence des deux backups en appelant la méthode du fichier difference.sh
+                                        difference $backup1 $backup2
+                                else
+                                        #Sinon on indique à l'utilisateur que les chemin entrés ne corresponde pas à un backup (erreur ou dossier)
+					affiche_message "Erreur..." "Un des chemins (ou les deux) ne correspond pas à un backups, veuillez réessayer en vous assurant que le vous sélectionnez bien des fichier de backups"
+				fi
+                fi
+	fi
+}
+
 #######################################################################################################################################################
 #                                                               Switch sur le choix de l'utilisateur                                                  #
 #######################################################################################################################################################
@@ -128,8 +152,8 @@ case $option in
 		esac
 	#L utilisateur souhaite comparer deux backups
 	elif [ "$choix" == "Comparer" ]; then
-		#On ouvre deux fenêtres de selection de fichier afin que l utilisateur choisise deux backups différents afin de faire la différence
-		affiche_selectionFichier "Choisissez un fichier de backup à comparer" "/var/backups"
+		#Appel de la fonction qui permet de traiter une différence entre backups.
+		faireDifference
 	#L'utilisateur souhaite récuperer un dossier ou un fichier dans un backup.
 	elif [ "$choix" == "Récuperer" ]; then
 		#On appel la fonction d'extraction de fichier ou dossier.

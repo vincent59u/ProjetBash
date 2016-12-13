@@ -27,7 +27,7 @@ function affiche_message(){
 
         #Personnalisation de la fenêtre
         $DIALOG --title "$1" \
-                --msgbox "$2" 10 30
+                --msgbox "$2" 20 45
 
 	#Switch sur le choix de l'utilisateur
 	case $? in
