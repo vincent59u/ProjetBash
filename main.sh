@@ -10,6 +10,7 @@
 #######################################################################################################################################################
 source SOURCES/backup.sh
 source SOURCES/chiffrement.sh
+source SOURCES/difference.sh
 source GUI/fenetre.sh
 
 #######################################################################################################################################################
@@ -67,7 +68,7 @@ function lancer_backup(){
 #Fonction qui permet de créer une clef de chiffrement si l'utilisateur en a aucune.
 function creationClef(){
 	#Appel de la fenêtre de dialog qui permet de saisir son nom.
-       	affiche_saisie "Saisir votre nom" "Veuillez saisir votre nom complet. Ex : Jacques DURANT"
+       	affiche_saisie "Saisir votre nom" "Une clef de chiffrement va être créer, merci de bien vouloir nous fournir vos informations afin de générer cette dernère.\nVeuillez saisir votre nom complet. Ex : Jacques DURANT"
        	#On affecte la valeur saisie à la variable nom.
         nom=$saisie
 	#Suite de if qui test à chaque fois que l'opération du dessus s est bien passé afin de quitté le programme sans probleme si l utilisateur appuie sur annuler
@@ -103,8 +104,9 @@ case $option in
 				#On initialise la variable retour à 0 afin que le programme s'execute lorsque l utilisateur possède déjà une clef.
 				retour=0
 				#Avant de lancer un backup, on s'assure que l utilisateur à une clef de chiffrement. Si c est pas le cas on lui en crée.
-				#Pour ce test, on compte le nombre de lignes que la commande de listage de clef retourne
+				#Pour ce test, on place le resultat de la commande qui liste les clef secrete dans une variable
 				clef=`gpg --list-secret-key`
+				#Si cette variable est vide, on crée une paire de clefs de chiffrement.
 				if [ -z "$clef" ]; then
 					creationClef
 				fi
