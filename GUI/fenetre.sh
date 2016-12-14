@@ -16,6 +16,12 @@ DIALOG=${DIALOG=dialog}
 #Cette fonction prends deux paramètres qui sont le titre de la fenêtre et le fichier de départ
 function affiche_selectionFichier(){
         fichier=`$DIALOG --stdout --title "$1" --fselect "$2"/ 14 48`
+	#On retourne la valeur du code de retour pour gérer les annulation
+	retour=$?
+	#Si l'utilisateur a appuyé sur annuler, on quitte la fonction de backup
+        if [ $retour -eq 1 ]; then
+            affiche_message "Annulation" "L'opération a bien été annulée"
+        fi
 }
 
 ######################################################################################################################################################

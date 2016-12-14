@@ -46,7 +46,7 @@ choix=`cat $fichtemp`
 #Fonction qui lance le processus qui permet de faire un dossier chiffré, compressé d'un backup
 function lancer_backup(){
 	#On vérifie que l'utilisateur n a pas appuyer sur annuler, sinon on lui affiche un message d annulation
-	if [ ! $? -eq 1 ]; then
+	if [ $retour -eq 0 ]; then
 		#Vérification que le fichier choisi soit un fichier et qu il se termine par l'extension .conf
         	if [ -f $1 ]; then
         	#On teste que l extension du fichier soit bien .conf (fichier de configuration)
@@ -61,9 +61,6 @@ function lancer_backup(){
         	      	#On indique a l utilisateur que le fichier n est pas correct
               		affiche_message "Erreur..." "Vous avez choisis un dossier et non un fichier de configuration ou bien le fichier sélectionné n'existe pas."
         	fi
-	else
-		#On indique a l utilisateur le message d'annulation
-           	affiche_message "Annulation" "L'opération a bien été annulée."
 	fi
 }
 
@@ -97,22 +94,22 @@ function faireDifference(){
 	#Ouvre une première fenetre qui permet de selectionner le premier backup
        	affiche_selectionFichier "Choisissez le premier backup qui sera comparer" "/var/backups"
         backup1=$fichier
-        	#Si l'utilisateur a accepter, on continue
-                if [ ! $? -eq 1 ]; then
-                        #Ouvre une deuxième fenêtre qui permet de selectionner le deuxième backup
-                        affiche_selectionFichier "Choisissez le deuxième backup qui sera comparer" "/var/backups"
-                        backup2=$fichier
-                        #Si l'utilisateur a accepter, on continue
-                        if [ ! $? -eq 1 ]; then
-                                #On teste que les deux backups existe (pour pas que l'utilisateur entre un faux chemin). Option -f car un tar.gz (Tous les backups) est consideré co$
-                                if [[ -f "$backup1" && -f "$backup2" ]]; then
-                                        #On fait la différence des deux backups en appelant la méthode du fichier difference.sh
-                                        difference $backup1 $backup2
-                                else
-                                        #Sinon on indique à l'utilisateur que les chemin entrés ne corresponde pas à un backup (erreur ou dossier)
-					affiche_message "Erreur..." "Un des chemins (ou les deux) ne correspond pas à un backups, veuillez réessayer en vous assurant que le vous sélectionnez bien des fichier de backups"
-				fi
-                fi
+        #Si l'utilisateur a accepter, on continue
+        if [ $retour -eq 0 ]; then
+        	#Ouvre une deuxième fenêtre qui permet de selectionner le deuxième backup
+                affiche_selectionFichier "Choisissez le deuxième backup qui sera comparer" "/var/backups"
+                backup2=$fichier
+                #Si l'utilisateur a accepter, on continue
+                if [ $retour -eq 0 ]; then
+                	#On teste que les deux backups existe (pour pas que l'utilisateur entre un faux chemin). Option -f car un tar.gz (Tous les backups) est consideré co$
+                        if [[ -f "$backup1" && -f "$backup2" ]]; then
+                        	#On fait la différence des deux backups en appelant la méthode du fichier difference.sh
+                                difference $backup1 $backup2
+                        else
+                                #Sinon on indique à l'utilisateur que les chemin entrés ne corresponde pas à un backup (erreur ou dossier)
+				affiche_message "Erreur..." "Un des chemins (ou les deux) ne correspond pas à un backups, veuillez réessayer en vous assurant que le vous sélectionnez bien des fichier de backups"
+			fi
+		fi
 	fi
 }
 
