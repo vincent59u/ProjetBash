@@ -65,4 +65,3 @@ function extraireFichier(){
 	fi
 }
 
-extraireFichier
