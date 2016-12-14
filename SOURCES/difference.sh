@@ -19,28 +19,30 @@ function difference(){
 	resultat=`cat tmp.txt`
 	#Si la variable est vide, cela veut dire qu il y a aucune différence entre les deux backups.
 	if [ -z "$resultat" ]; then
-		echo "Il n'y a aucune différence entre ces deux backups"
+		#On indique à l'utilisateur que les deux backups sont identiques (aucunes différences).
+		affiche_message "Aucune différences" "Les deux backups que vous avez entrez en paramètre ne contienne aucune différences. Ils sont donc identiques."
 	else
-		indexSuppr=0
-		indexAjout=0
+		#Déclaration de deux tableau qui permettent de stocker la liste des fichiers ajoutés et/ou supprimés entre ces deux backups
+		tabSuppr=()
+		tabAjout=()
 		#On boucle sur chaque ligne du fichier tmp.txt
 		for ligne in $resultat; do
 			#Si la ligne match avec la regex, cela veut dire quil y a un fichier qui a été supprimé ou ajouté.
 			if [[ "$ligne" =~ $regex ]]; then
 				#Si le fichier a été supprimé entre les deux backups, on l'indique à l utilisateur.
 				if [ ${BASH_REMATCH[1]} = "<" ]; then
-					suppr[indexSuppr]=${BASH_REMATCH[2]}
-					let indexSuppr++
+					#On ajoute le fichier dans le tableau de valeur
+					tabSuppr=("${tabSuppr[@]}" "${BASH_REMATCH[2]}")
 				fi
 				#Si le fichier a été ajouté entre les deux backups, on l'indique à l utilisateur.
 				if [ ${BASH_REMATCH[1]} = ">" ]; then
-                                        ajout[indexAjout]=${BASH_REMATCH[2]}
-					let indexAjout++
+					#On ajoute le fichier dans le tableau de valeur
+                                        tabAjout=("${tabAjout[@]}" "${BASH_REMATCH[2]}")
                                 fi
 			fi
 		done
-		echo $suppr
-		echo $ajout
+		#On crée une boite de dialog pour afficher l'ensemble des différences entre les deux backups.
+		affiche_message "Liste des différences" "Voici la liste des fichiers qui ont été supprimés et/ou ajoutés entre les deux backups que vous avez sélectionné.\n\nFichier(s) supprimé(s) :\n${tabSuppr[*]}\n\nFichier(s) ajouté(s) :\n${tabAjout[*]}"
 	fi
 	#On supprime le fichier temporaire
 	rm tmp.txt
