@@ -31,9 +31,7 @@ function extraireFichier(){
 				#On choisit la destination ( pour éviter qu'il ecrase un fichier existant )
 				affiche_saisie "Choisir chemin pour votre fichier" "Choisissez le chemin vers le dossier dans lequel vous souhaitez enregistrer le fichier ou dossier extrait"
 				if [[ "$saisie" =~ '/'$ ]]; then
-				echo $saisie
 				saisie=${saisie::-1}
-				echo $saisie
 				fi
 				#S'il a choisit Accepter
 				if [ $retour -eq 0 ]; then
