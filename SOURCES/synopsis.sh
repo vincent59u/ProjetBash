@@ -68,6 +68,3 @@ checkFile(){
 	fi
 }
 
-#On teste la fonction pour voir si elle fonctionne (et elle fonctionne bien)
-recupererSynopsis
-

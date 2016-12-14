@@ -16,6 +16,29 @@ source GUI/fenetre.sh
 #######################################################################################################################################################
 #                                            Fonction qui crée, chiffre et compresse un dossier de backup                                             #
 #######################################################################################################################################################
+
+#Fonction récursive chiffrant un fichier ($1) et le déplacant dans le dossier précisé ($2)
+function chiffMv(){
+	#si le chemin correspond à un dossier;
+	if [[ -d $1 ]]; then
+		#on créé ce sous-dossier dans le dossier précisé	
+		mkdir $2/${1##*/}
+		#on chiffre et déplace chaqun de ses fichiers
+		for FILE in $1/*; do
+			chiffMv $FILE $2/${1##*/}
+		done
+	#sinon, le chemin correspond à un fichier :	
+	else
+		#Chiffrement de chaque fichier avant de le copier dans le dossier de backup
+		chiffrement "$1"
+		#Si le fichier n'a pas été chiffré, on ne le déplace pas (car il existe pas)
+		if [ $retour -eq 0 ]; then
+			#On déplace le fichier crypté dans le dossier de backup
+			mv ${1}.gpg $2
+		fi
+	fi
+}
+
 function backup(){
 	chemin=$PWD
 	#Appel d'une fonction qui permet à l utilisateur de saisir un nom de dossier dans une boite de dialogue
@@ -31,15 +54,9 @@ function backup(){
 		#On créé le dossier de backup, qui contiendra les fichiers à sauvegarder et sera ensuite compressé
 		DIR=$saisie/`date +%s`
 		mkdir $DIR
-		#On copie le dossier de backup l ensembles des fichier ou dossier indiqué dans le fichier de configuration
+		#On copie le dossier de backup : l'ensemble des fichier ou dossier indiqué dans le fichier de configuration
 		for ligne in $(cat $1); do
-			#Chiffrement de chaque fichiers avant de le copier dans le dossier de backup
-			chiffrement "$ligne"
-			#Si le fichier n'a pas été chiffré, on ne le déplace pas (car il existe pas)
-			if [ $retour -eq 0 ]; then
-				#On déplace le fichier crypté dans le dossier de backup
-				mv ${ligne}.gpg $DIR
-			fi
+			chiffMv $ligne $DIR
 		done
 		if [ $retour -eq 0 ]; then
 			#compression du dossier de backup. Une fois le dossier compressé, la version non-compressé sera supprimée par le programme.
