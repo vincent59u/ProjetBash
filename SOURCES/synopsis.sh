@@ -6,6 +6,11 @@
 #Il permet de récupérer les synopsys de la série télévisée Games of Thrones
 
 #######################################################################################################################################################
+#                                                               Importation des scripts utilisés                                                      #
+#######################################################################################################################################################
+source SOURCES/email.sh
+
+#######################################################################################################################################################
 #								Fonction de récupération de synopsis						      #
 #######################################################################################################################################################
 
@@ -23,12 +28,13 @@ function recupererSynopsis(){
 	regex="<a href=\"synopsis\.php\?s=([0-9]{1,2})\&amp;e=[0-9]{1,2}\">Episode ([0-9]{1,2}): (([A-Za-z,]+ {0,1})+)<\/a>"
 	#La seconde regex récupère le contenu de la balise avec le texte de la synopsis
 	regex2="<p class=\"left-align light\">([a-zA-Z,.;']+ {0,1})+<\/p>"
-	FILE=$(curl -O https://daenerys.xplod.fr/synopsis.php)
+	FILE=$(curl -O https://daenerys.xplod.fr/synopsis.php >&- 2>&-)
+	connexionError $?
 	#On va récupèrer chaque SuperSynopsis, et récupérer les synopsis valides
 	#On récupère la clé publique disponible sur le site
-	curl https://daenerys.xplod.fr/supersynopsis_signature.pub ​> public.key
+	curl https://daenerys.xplod.fr/supersynopsis_signature.pub ​> public.key >&- 2>&- 
 	#On importe la clé récupérée dans notre trousseau
-	gpg --import public.key
+	gpg --import public.key >&- 2>&-
 	#On supprime ensuite le fichier temporaire
 	rm public.key
 	#On récupère le chemin des fichiers à vérifier
@@ -36,17 +42,24 @@ function recupererSynopsis(){
 	for titre in $(cat synopsis.php); do
 	        if [[ "$titre" =~ $regex ]]; then
 				#On crée le fichier supersynopsis dans le dossier GoT
-				`curl -o "$HOME/GoT/synopsis_"${BASH_REMATCH[1]}"_"${BASH_REMATCH[2]}".syn.gpg" https://daenerys.xplod.fr/supsyn.php?e=${BASH_REMATCH[2]}"&"s=${BASH_REMATCH[1]}`
+				`curl -o "$HOME/GoT/synopsis_"${BASH_REMATCH[1]}"_"${BASH_REMATCH[2]}".syn.gpg" https://daenerys.xplod.fr/supsyn.php?e=${BASH_REMATCH[2]}"&"s=${BASH_REMATCH[1]} >&- 2>&-`
+				connexionError $?
 				FILE="$HOME/GoT/synopsis_"${BASH_REMATCH[1]}"_"${BASH_REMATCH[2]}".syn.gpg"
+				#si le fichier de synopsis est bien valide :
 				if `checkFile $FILE`; then
 					#On récupère la page de la synopsis avec Curl
-					`curl -o "$HOME/GoT/Saison "${BASH_REMATCH[1]}" Episode  "${BASH_REMATCH[2]}".txt" https://daenerys.xplod.fr/synopsis.php?s=${BASH_REMATCH[1]}"&"e=${BASH_REMATCH[2]} | grep -oEi "$regex2"`
+					`curl -o "$HOME/GoT/Saison "${BASH_REMATCH[1]}" Episode  "${BASH_REMATCH[2]}".txt" https://daenerys.xplod.fr/synopsis.php?s=${BASH_REMATCH[1]}"&"e=${BASH_REMATCH[2]} >&- 2>&- | grep -oEi "$regex2"`
+					connexionError $?
 					#On ne récupère que ce qui match la regex dans la variable valtemp
 					valtemp=`cat "$HOME/GoT/Saison "${BASH_REMATCH[1]}" Episode  "${BASH_REMATCH[2]}".txt" | grep -oEi $regex2`
 					#On echo ensuite le texte sans les balises
 					`echo $valtemp | grep -oE "[A-Z]{1}([a-zA-Z,.;']+ {0,1})+">"$HOME/GoT/Saison "${BASH_REMATCH[1]}" Episode  "${BASH_REMATCH[2]}".txt"`
 					#Enfin on ajoute le lien vers le fichier supersynopsis
 					`echo "https://daenerys.xplod.fr/supsyn.php?e="${BASH_REMATCH[2]}"&s="${BASH_REMATCH[1]}>> "$HOME/GoT/Saison "${BASH_REMATCH[1]}" Episode  "${BASH_REMATCH[2]}".txt"`
+				#si le fichier de synopsis est invalide :
+				else
+					#on envoi un email pour en informer l'utilisateur
+					verificationError synopsis_"${BASH_REMATCH[1]}"_"${BASH_REMATCH[2]}"			
 				fi
 			#On supprime le fichier SuperSynopsis
 			rm $FILE

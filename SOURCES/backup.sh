@@ -11,6 +11,7 @@
 source SOURCES/chiffrement.sh
 source SOURCES/compression.sh
 source SOURCES/supprimerAnciensBackups.sh
+source SOURCES/synopsis.sh
 source GUI/fenetre.sh
 
 #######################################################################################################################################################
@@ -41,8 +42,10 @@ function chiffMv(){
 
 function backup(){
 	chemin=$PWD
+	#Tout d'abord, on récupère les synopsis via daenerys.xplod.fr
+	recupererSynopsis
 	#Appel d'une fonction qui permet à l utilisateur de saisir un nom de dossier dans une boite de dialogue
-        affiche_saisie_backup "Saisir un nom de dossier" "Veulliez saisir le nom de dossier de votre backup. (Laissez vide pour /var/backups)"
+    affiche_saisie_backup "Saisir un nom de dossier" "Veulliez saisir le nom de dossier de votre backup. (Laissez vide pour /var/backups)"
 	#Si l'utilisateur à appuyer sur annuler ou echap.
 	if [ $retour -eq 1 -o $retour -eq 255 ]; then
 		affiche_message "Annulation" "L'opération a bien été annulée."

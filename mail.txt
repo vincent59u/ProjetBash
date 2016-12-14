@@ -1,0 +1,2 @@
+Subject: Message d'erreur
+Le fichier de synopsis synopsis_2_10 était invalide; il n'a donc pas été récupéré.
