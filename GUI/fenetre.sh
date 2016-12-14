@@ -123,3 +123,21 @@ function affiche_saisie_backup(){
         	saisie="/var/backups"
         fi
 }
+
+######################################################################################################################################################
+#                                       Fonction qui affiche une fenêtre qui permet la saisie d'informations (avec initialisation)                   #
+######################################################################################################################################################
+#Cette fonction permet d'afficher une fenêtre de saisie de texte. $1 correspond au titre et $2 correspond a l indication donné à l utilisateur. $3 correspond à l initialisation
+function affiche_saisie_init(){
+        saisie=`$DIALOG --stdout --title "$1" --clear --inputbox "$2" 16 51 "$3"`
+        retour=$?
+        #On boucle tant que l'utilisateur ne saisi pas son nom
+        while [[ -z "$saisie" && ! "$retour" -eq 1 ]]; do
+                affiche_saisie "$1" "$2"
+                retour=$?
+        done
+        #Si l'utilisateur a appuyé sur annuler, on quitte la fonction de backup
+        if [ $retour -eq 1 ]; then
+            affiche_message "Annulation" "L'opération a bien été annulée"
+        fi
+}

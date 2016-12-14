@@ -35,19 +35,24 @@ function backup(){
 		for ligne in $(cat $1); do
 			#Chiffrement de chaque fichiers avant de le copier dans le dossier de backup
 			chiffrement "$ligne"
-			#On déplace le fichier crypté dans le dossier de backup
-			mv ${ligne}.gpg $DIR
+			#Si le fichier n'a pas été chiffré, on ne le déplace pas (car il existe pas)
+			if [ $retour -eq 0 ]; then
+				#On déplace le fichier crypté dans le dossier de backup
+				mv ${ligne}.gpg $DIR
+			fi
 		done
-		#compression du dossier de backup. Une fois le dossier compressé, la version non-compressé sera supprimée par le programme.
-		compression "$DIR"
-		#On regarde si le nombre de backups est supérieur à 100. On supprime le plus ancien backup le cas échéant
-		supprimerAnciensBackups "$saisie"
-		cd $chemin
-		#On indique à l'utilisateur si l opération s est bien déroulée ou non
-		if [ $? -eq 0 ]; then
-			affiche_message "Succès" "Le dossier de backup a été correctement créé."
-		else
-			affiche_message "Erreur..." "Une erreur est survenue lors de la création du dossier de backup, veuillez recommencer l'opération."
+		if [ $retour -eq 0 ]; then
+			#compression du dossier de backup. Une fois le dossier compressé, la version non-compressé sera supprimée par le programme.
+			compression "$DIR"
+			#On regarde si le nombre de backups est supérieur à 100. On supprime le plus ancien backup le cas échéant
+			supprimerAnciensBackups "$saisie"
+			cd $chemin
+			#On indique à l'utilisateur si l opération s est bien déroulée ou non
+			if [ $retour -eq 0 ]; then
+				affiche_message "Succès" "Le fichier de backup a été correctement créé."
+			else
+				affiche_message "Erreur..." "Une erreur est survenue lors de la création du dossier de backup, veuillez recommencer l'opération."
+			fi
 		fi
 	fi
 }

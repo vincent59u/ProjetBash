@@ -21,18 +21,26 @@ function difference(){
 	if [ -z "$resultat" ]; then
 		echo "Il n'y a aucune différence entre ces deux backups"
 	else
+		indexSuppr=0
+		indexAjout=0
 		#On boucle sur chaque ligne du fichier tmp.txt
 		for ligne in $resultat; do
+			#Si la ligne match avec la regex, cela veut dire quil y a un fichier qui a été supprimé ou ajouté.
 			if [[ "$ligne" =~ $regex ]]; then
+				#Si le fichier a été supprimé entre les deux backups, on l'indique à l utilisateur.
 				if [ ${BASH_REMATCH[1]} = "<" ]; then
-					echo "Le fichier ou dossier ${BASH_REMATCH[2]} a été ajouté entre les deux backups."
+					suppr[indexSuppr]=${BASH_REMATCH[2]}
+					let indexSuppr++
 				fi
-
+				#Si le fichier a été ajouté entre les deux backups, on l'indique à l utilisateur.
 				if [ ${BASH_REMATCH[1]} = ">" ]; then
-                                        echo "Le fichier ou dossier ${BASH_REMATCH[2]} a été supprimé entre les deux backups."
+                                        ajout[indexAjout]=${BASH_REMATCH[2]}
+					let indexAjout++
                                 fi
 			fi
 		done
+		echo $suppr
+		echo $ajout
 	fi
 	#On supprime le fichier temporaire
 	rm tmp.txt

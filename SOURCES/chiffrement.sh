@@ -56,7 +56,9 @@ EOF
 #                                                       Fonction qui permet de chiffrer le dossier de backup                                          #
 #######################################################################################################################################################
 function chiffrement(){
-        #Si aucun fichier ou dossier n'es placé en paramètre, on affiche un message d erreur
+        #code de retour qui sera modifier en cas d'erreur
+	retour=0
+	#Si aucun fichier ou dossier n'es placé en paramètre, on affiche un message d erreur
 	if [ $# = 0 ]; then
                 affiche_message "Erreur..." "Aucun dossier ou fichier n'a été placé en paramètre"
         else
@@ -66,7 +68,9 @@ function chiffrement(){
                         gpg --encrypt --default-recipient-self $1
                 else
                         #Sinon on affiche le message d erreur concernant l inexistance du dossier
-                        affiche_message "Erreur..." "Le dossier ou le fichier placé en paramètre n'existe pas"
+                        affiche_message "Erreur..." "Un des fichier ou dossier de votre fichier de configuration (.conf) n'existe pas, veuillez créer un fichier de configuration correct."
+			#On initialise le code de retour à 1 afin de terminer le process dans le backup.sh lorsqu'il y a une erreur de ce type.
+			retour=1
                 fi
         fi
 }
