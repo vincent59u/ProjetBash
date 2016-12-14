@@ -63,7 +63,7 @@ function backup(){
 			compression "$DIR"
 			#On regarde si le nombre de backups est supérieur à 100. On supprime le plus ancien backup le cas échéant
 			supprimerAnciensBackups "$saisie"
-			cd $chemin
+			cd "$chemin"
 			#On indique à l'utilisateur si l opération s est bien déroulée ou non
 			if [ $retour -eq 0 ]; then
 				affiche_message "Succès" "Le fichier de backup a été correctement créé."
