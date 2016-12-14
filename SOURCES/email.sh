@@ -11,6 +11,7 @@ function errorEmail(){
 	echo "$1" >> mail.txt 
 	#Envoie l'email à l'utilisateur
 	sendmail -v $USER@$HOSTNAME.home < mail.txt >&- 2>&- 
+	rm mail.txt
 }
 
 #Fonction envoyant un email s'il y a eu une erreur lorsqu'un fichier de synopsis n'est pas valide (Le nom doit être passé en paramètre)
