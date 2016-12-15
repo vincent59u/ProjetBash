@@ -28,7 +28,7 @@ function recupererSynopsis(){
 	regex="<a href=\"synopsis\.php\?s=([0-9]{1,2})\&amp;e=[0-9]{1,2}\">Episode ([0-9]{1,2}): (([A-Za-z,]+ {0,1})+)<\/a>"
 	#La seconde regex récupère le contenu de la balise avec le texte de la synopsis
 	regex2="<p class=\"left-align light\">([a-zA-Z,.;']+ {0,1})+<\/p>"
-	FILE=$(curl -O https://daenerys.xplod.fr/synopsis.php >&- 2>&-)
+	curl -O https://daenerys.xplod.fr/synopsis.php >&- 2>&-
 	connexionError $?
 	#On va récupèrer chaque SuperSynopsis, et récupérer les synopsis valides
 	#On récupère la clé publique disponible sur le site
@@ -38,7 +38,11 @@ function recupererSynopsis(){
 	#On supprime ensuite le fichier temporaire
 	rm public.key
 	#On récupère le chemin des fichiers à vérifier
+	#On récupère le nombre d'opérations à faire afin de pouvoir afficher une jolie barre de progression	(wc -l ne récupère pas le bon nombre)	
+	nbr=`n=0 && for i in $(cat synopsis.php); do let n+=1; done && echo $n`
 	#Pour chaque synopsis
+	(
+	n=1
 	for titre in $(cat synopsis.php); do
 	        if [[ "$titre" =~ $regex ]]; then
 				#On crée le fichier supersynopsis dans le dossier GoT
@@ -64,7 +68,14 @@ function recupererSynopsis(){
 			#On supprime le fichier SuperSynopsis
 			rm $FILE
 	        fi
+	#Code pour la jauge de progression sur la boite de dialogue
+	echo "XXX"
+	echo "Opération $(($n*100/$nbr))/100..." 
+	echo "XXX"
+	echo $(($n*100/$nbr))
+	let n+=1
 	done
+	) | dialog --title 'Récupération des synopsis' --gauge 'Veuillez patienter' 0 0 0
 	#On supprime le fichier permettant d'afficher le nom des épisodes
 	rm synopsis.php
 }
