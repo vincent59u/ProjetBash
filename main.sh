@@ -31,7 +31,9 @@ $DIALOG --clear --title "Programme de backups de Laurene, Benjamin et Matthieu" 
 	"Configuration" "Permet de créer un fichier de configuration automatisé depuis l'application" \
 	"Backup" "Faire un backup des fichiers et les envoyer sur le serveur" \
 	"Comparer" "Comparer deux backups (différences entre ajout et suppression)" \
-	"Récuperer" "Récuperer un fichier ou un dossier d'un backup" 2> $fichtemp
+	"Récuperer" "Récuperer un fichier ou un dossier d'un backup" \
+	"Upload" "Uploader un backups sur le serveur" \
+	"Télécgarger" "Télécharger un backups qui se trouve sur le serveur" 2> $fichtemp
 
 #######################################################################################################################################################
 #                                                               Récupération des options séléctionnées                                                #
