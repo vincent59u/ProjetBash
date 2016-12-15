@@ -15,20 +15,19 @@ source SOURCES/synopsis.sh
 source GUI/fenetre.sh
 
 #######################################################################################################################################################
-#                                            Fonction qui crée, chiffre et compresse un dossier de backup                                             #
+#                                       Fonction récursive qui permet de chiffrer chaque fichier et dossier d'un backup                               #
 #######################################################################################################################################################
-
 #Fonction récursive chiffrant un fichier ($1) et le déplacant dans le dossier précisé ($2)
 function chiffMv(){
 	#si le chemin correspond à un dossier;
 	if [[ -d $1 ]]; then
-		#on créé ce sous-dossier dans le dossier précisé	
+		#on créé ce sous-dossier dans le dossier précisé
 		mkdir $2/${1##*/}
 		#on chiffre et déplace chaqun de ses fichiers
 		for FILE in $1/*; do
 			chiffMv $FILE $2/${1##*/}
 		done
-	#sinon, le chemin correspond à un fichier :	
+	#sinon, le chemin correspond à un fichier :
 	else
 		#Chiffrement de chaque fichier avant de le copier dans le dossier de backup
 		chiffrement "$1"
@@ -40,12 +39,16 @@ function chiffMv(){
 	fi
 }
 
+#######################################################################################################################################################
+#                                            Fonction qui crée, chiffre et compresse un dossier de backup                                             #
+#######################################################################################################################################################
+#Fonction qui permet la création de backup. $1 correspond au fichier de configuration placé en paramètre par l utilisateur.
 function backup(){
 	chemin=$PWD
 	#Tout d'abord, on récupère les synopsis via daenerys.xplod.fr
 	recupererSynopsis
 	#Appel d'une fonction qui permet à l utilisateur de saisir un nom de dossier dans une boite de dialogue
-    affiche_saisie_backup "Saisir un nom de dossier" "Veulliez saisir le nom de dossier de votre backup. (Laissez vide pour /var/backups)"
+    	affiche_saisie_backup "Saisir un nom de dossier" "Veulliez saisir le nom de dossier de votre backup. (Laissez vide pour /var/backups)"
 	#Si l'utilisateur à appuyer sur annuler ou echap.
 	if [ $retour -eq 1 -o $retour -eq 255 ]; then
 		affiche_message "Annulation" "L'opération a bien été annulée."

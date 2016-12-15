@@ -12,6 +12,7 @@ source SOURCES/backup.sh
 source SOURCES/chiffrement.sh
 source SOURCES/difference.sh
 source SOURCES/extrairefichier.sh
+source SOURCES/createconf.sh
 source GUI/fenetre.sh
 
 #######################################################################################################################################################
@@ -26,7 +27,8 @@ trap "rm -f $fichtemp" 0 1 2 5 15
 
 #Personnalisation de la fenêtre de dialog avec différentes options (titre, menu, liste des options...)
 $DIALOG --clear --title "Programme de backups de Laurene, Benjamin et Matthieu" \
-	--menu "Bonjour, ce programme premet la gestion automatique de backups, sécurisé, et permet la récupération d’anciens fichiers, avec possibilité de récupérer des fichiers mis à jour depuis internet de façon sécurisée, tolérant les erreurs. Veuillez choisir une opération à effectuer parmi les options suivantes :" 50 80 8 \
+	--menu "Bonjour, ce programme premet la gestion automatique de backups, sécurisé, et permet la récupération d’anciens fichiers, avec possibilité de récupérer des fichiers mis à jour depuis internet de façon sécurisée, tolérant les erreurs. Veuillez choisir une opération à effectuer parmi les options suivantes :" 50 100 8 \
+	"Configuration" "Permet de créer un fichier de configuration automatisé depuis l'application" \
 	"Backup" "Faire un backup des fichiers et les envoyer sur le serveur" \
 	"Comparer" "Comparer deux backups (différences entre ajout et suppression)" \
 	"Récuperer" "Récuperer un fichier ou un dossier d'un backup" 2> $fichtemp
@@ -119,8 +121,12 @@ function faireDifference(){
 case $option in
 #Option Valider
 0)	#Bloc if qui permet de trouver l option sélectionnée par l utilisateur
+	#L utilisateur souhaite faire un fichier de configuration
+	if [ "$choix" == "Configuration" ]; then
+		#Appel de la fonction qui permet de créer un fichier de backup
+		createConf
 	#L utilisateur souhaite faire un backup
-	if [ "$choix" == "Backup" ]; then
+	elif [ "$choix" == "Backup" ]; then
 		#Switch sur le retour de la fenêtre de dialog
 		case $? in
 			0)

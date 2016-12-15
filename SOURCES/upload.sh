@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# @author Laurene, Matthieu, Benjamin
+
 #Fonction permettant l'upload de backup sur daenerys
 
 ##############################################################################################################################
@@ -35,22 +37,29 @@ else
 	affiche_message "Erreur avec le fichier" "Le fichier n'est pas un backup .tar.gz"
 fi
 }
+
+##############################################################################################################################
+#                       Fonction qui permet de lister les backups en ligne                                                   #
+##############################################################################################################################
 #Utile pour la récup
 #curl https://daenerys.xplod.fr/backup/list.php?login=Cladt_Rath_Vincent
-
 function listerBackup(){
-curl https://daenerys.xplod.fr/backup/list.php?login=Cladt_Rath_Vincent
+	curl https://daenerys.xplod.fr/backup/list.php?login=Cladt_Rath_Vincent
 }
 
+##############################################################################################################################
+#                       Fonction qui permet de télécharger un backups en ligne                                               #
+##############################################################################################################################
+#Fonctuion qui nous permet de récuper un backup qui a été uploader sur le serveur
 function downloadBackup(){
-#IFS=$'\n'
-regexhash="^[a-z0-9]+$"
-regexfichier="\([A-Za-z0-9\/\.]+\)"
-fichiersgz=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexfichier)
-fichiersgz=$(echo $fichiersgz | grep -oE "[0-9]+\.tar\.gz")
-hashs=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexhash)
-echo $fichiersgz  #Le noms des fichiers présents sur daenerys
-echo $hashs #La liste de tout les hashs présents sur le serveur daenerys
+	#IFS=$'\n'
+	regexhash="^[a-z0-9]+$"
+	regexfichier="\([A-Za-z0-9\/\.]+\)"
+	fichiersgz=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexfichier)
+	fichiersgz=$(echo $fichiersgz | grep -oE "[0-9]+\.tar\.gz")
+	hashs=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexhash)
+	echo $fichiersgz  #Le noms des fichiers présents sur daenerys
+	echo $hashs #La liste de tout les hashs présents sur le serveur daenerys
 
 }
 
