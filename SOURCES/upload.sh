@@ -52,14 +52,26 @@ function listerBackup(){
 ##############################################################################################################################
 #Fonctuion qui nous permet de récuper un backup qui a été uploader sur le serveur
 function downloadBackup(){
-	#IFS=$'\n'
-	regexhash="^[a-z0-9]+$"
-	regexfichier="\([A-Za-z0-9\/\.]+\)"
+	regexhash="^[a-z0-9]+$" #regex pour le hash
+	regexfichier="\([A-Za-z0-9\/\.]+\)" #regex pour le fichier
 	fichiersgz=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexfichier)
-	fichiersgz=$(echo $fichiersgz | grep -oE "[0-9]+\.tar\.gz")
-	hashs=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexhash)
-	echo $fichiersgz  #Le noms des fichiers présents sur daenerys
-	echo $hashs #La liste de tout les hashs présents sur le serveur daenerys
-
+	fichiersgz=$(echo $fichiersgz | grep -oE "[0-9]+\.tar\.gz") #Les fichiers .tar.gz
+	hashs=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexhash) #Les hashs 
+	arr=($fichiersgz) #On stocke les fichiers dans un tableau
+	arr2=($hashs) #On stocke les hashs dans un tableau
+	vartest=""
+	for ((i=0;i<${#arr[@]};++i)); do
+	vartest=$vartest"${arr2[i]} ${arr[i]} " #On concatene hashs puis fichier puis hashs puis fichier...
+	done
+	hash=$(dialog --stdout --title "Telechargement backup" --menu "Hash et fichier" 0 0 0 $vartest)  #On cree un menu pour choisir le fichier et on recup le hash
+	echo $hash
+	currentlocation=$PWD
+	cd "/var/backups" #On stocke les fichiers dans le dossier de backup
+	curl https://daenerys.xplod.fr/backup/download.php?login=Cladt_Rath_Vincent&hash=$hash #On dl le fichier !!!!!!!!! HASH PAS RECCONU !!!!!!!
+	retour=$?
+	cd $currentlocation
+	if [ $retour -eq 0 ]; then
+	affiche_message "Fichier telechargé" "Retrouver le dans /var/backups !"
+	fi
 }
 
