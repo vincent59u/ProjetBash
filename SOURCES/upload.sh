@@ -61,17 +61,25 @@ function downloadBackup(){
 	arr2=($hashs) #On stocke les hashs dans un tableau
 	vartest=""
 	for ((i=0;i<${#arr[@]};++i)); do
-	vartest=$vartest"${arr2[i]} ${arr[i]} " #On concatene hashs puis fichier puis hashs puis fichier...
+		vartest=$vartest"${arr2[i]} ${arr[i]} " #On concatene hashs puis fichier puis hashs puis fichier...
 	done
 	hash=$(dialog --stdout --title "Telechargement backup" --menu "Hash et fichier" 0 0 0 $vartest)  #On cree un menu pour choisir le fichier et on recup le hash
 	echo $hash
 	currentlocation=$PWD
 	cd "/var/backups" #On stocke les fichiers dans le dossier de backup
-	curl https://daenerys.xplod.fr/backup/download.php?login=Cladt_Rath_Vincent&hash=$hash #On dl le fichier !!!!!!!!! HASH PAS RECCONU !!!!!!!
-	retour=$?
-	cd $currentlocation
+	affiche_saisie "Choisir nom pour votre fichier .tar.gz" "Nom sans tar.gz"
 	if [ $retour -eq 0 ]; then
-	affiche_message "Fichier telechargé" "Retrouver le dans /var/backups !"
+		curl -o $saisie".tar.gz" https://daenerys.xplod.fr/backup/download.php?login=Cladt_Rath_Vincent\&hash=$hash #On dl le fichier !!!!!!!!! HASH PAS RECCONU !!!!!!!
+		if [ $? -eq 0 ]; then
+			cd $currentlocation
+			affiche_message "Fichier telechargé" "A retrouver dans /var/backups"
+		else
+			cd $currentlocation
+			affiche_message "Erreur Curl" "Un erreur avec Curl est survenu"
+		fi
+	else
+		cd $currentlocation
+		affiche_message "Erreur" "Vous n'avez pas entré de nom pour votre fichier"
 	fi
 }
 
