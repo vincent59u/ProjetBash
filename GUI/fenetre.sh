@@ -44,6 +44,24 @@ function affiche_message(){
 }
 
 ######################################################################################################################################################
+#                                       Fonction qui affiche une fenêtre d'information et quitte le programme                                        #
+######################################################################################################################################################
+#Cette fonction permet d afficher le message de fin de programme. $1 correspond au titre et $2 correspond au corps du message
+function affiche_message_exit(){
+        DIALOG=${DIALOG=dialog}
+
+        #Personnalisation de la fenêtre
+        $DIALOG --title "$1" \
+                --msgbox "$2" 20 45
+
+        #On quitte le programme
+        case $? in
+                0)      exit;;
+                255)    exit;;
+        esac
+}
+
+######################################################################################################################################################
 #                                       Fonction qui affiche une fenêtre d'information (Ok comme seule choix)                                        #
 ######################################################################################################################################################
 #Cette fonction permet d afficher un message à l utilisateur sans le ramener sur le main.sh. $1 correspond au titre et $2 correspond au corps du message

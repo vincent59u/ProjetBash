@@ -6,14 +6,23 @@
 #Il permet d afficher une fenêtre avec la liste de choix que l'utilisateur peut effectuer
 
 #######################################################################################################################################################
-#								Importation des scripts utilisés						      #
+#                                                               Importation des scripts utilisés                                                      #
 #######################################################################################################################################################
+#Importation des script qui sont important au fonctionnement de l'application
+source GUI/fenetre.sh
 source SOURCES/backup.sh
 source SOURCES/chiffrement.sh
 source SOURCES/difference.sh
 source SOURCES/extrairefichier.sh
 source SOURCES/createconf.sh
-source GUI/fenetre.sh
+source SOURCES/upload.sh
+source SOURCES/packageInstaller.sh
+
+#######################################################################################################################################################
+#                                                               Vérification des packages installés                                                   #
+#######################################################################################################################################################
+#Vérifie l'ensembles des packages nécessaires au lancement du programme
+verifierPackage
 
 #######################################################################################################################################################
 #								Création de la fenêtre de dialogue						      #
@@ -33,7 +42,7 @@ $DIALOG --clear --title "Programme de backups de Laurene, Benjamin et Matthieu" 
 	"Comparer" "Comparer deux backups (différences entre ajout et suppression)" \
 	"Récuperer" "Récuperer un fichier ou un dossier d'un backup" \
 	"Upload" "Uploader un backups sur le serveur" \
-	"Télécgarger" "Télécharger un backups qui se trouve sur le serveur" 2> $fichtemp
+	"Télécharger" "Télécharger un backups qui se trouve sur le serveur" 2> $fichtemp
 
 #######################################################################################################################################################
 #                                                               Récupération des options séléctionnées                                                #
@@ -163,11 +172,12 @@ case $option in
 	elif [ "$choix" == "Récuperer" ]; then
 		#On appel la fonction d'extraction de fichier ou dossier.
 		extraireFichier
+	elif [ "$choix" == "Upload" ]; then
+		#On appel la fonction d'upload pour mettre un backup en ligne.
+		uploadBackup
 	fi;;
 #Option Annuler
-1) 	#clear
-	echo "Au revoir..";;
+1) 	affiche_message_exit "Au revoir.." "A bientôt sur notre programme de backup.\n\nRéalisé par :\nLaurene CLADT\nMatthieu VINCENT\nBenjamin RATH";;
 #Option Echap
-255) 	#clear
-	echo "Au revoir..";;
+255) 	affiche_message_exit "Au revoir.." "A bientôt sur notre programme de backup.\n\nRéalisé par :\nLaurene CLADT\nMatthieu VINCENT\nBenjamin RATH";;
 esac
