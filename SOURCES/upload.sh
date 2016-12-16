@@ -50,36 +50,37 @@ function listerBackup(){
 ##############################################################################################################################
 #                       Fonction qui permet de télécharger un backups en ligne                                               #
 ##############################################################################################################################
-#Fonctuion qui nous permet de récuper un backup qui a été uploader sur le serveur
+#Fonction qui nous permet de récuper un backup qui a été uploader sur le serveur
 function downloadBackup(){
 	regexhash="^[a-z0-9]+$" #regex pour le hash
 	regexfichier="\([A-Za-z0-9\/\.]+\)" #regex pour le fichier
 	fichiersgz=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexfichier)
 	fichiersgz=$(echo $fichiersgz | grep -oE "[0-9]+\.tar\.gz") #Les fichiers .tar.gz
-	hashs=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexhash) #Les hashs 
+	hashs=$(cat "$HOME/hashsauvegarde.txt" | grep -oE $regexhash) #Les hashs
 	arr=($fichiersgz) #On stocke les fichiers dans un tableau
 	arr2=($hashs) #On stocke les hashs dans un tableau
 	vartest=""
 	for ((i=0;i<${#arr[@]};++i)); do
 		vartest=$vartest"${arr2[i]} ${arr[i]} " #On concatene hashs puis fichier puis hashs puis fichier...
 	done
-	hash=$(dialog --stdout --title "Telechargement backup" --menu "Hash et fichier" 0 0 0 $vartest)  #On cree un menu pour choisir le fichier et on recup le hash
-	echo $hash
-	currentlocation=$PWD
-	cd "/var/backups" #On stocke les fichiers dans le dossier de backup
-	affiche_saisie "Choisir nom pour votre fichier .tar.gz" "Nom sans tar.gz"
-	if [ $retour -eq 0 ]; then
-		curl -o $saisie".tar.gz" https://daenerys.xplod.fr/backup/download.php?login=Cladt_Rath_Vincent\&hash=$hash #On dl le fichier !!!!!!!!! HASH PAS RECCONU !!!!!!!
-		if [ $? -eq 0 ]; then
-			cd $currentlocation
-			affiche_message "Fichier telechargé" "A retrouver dans /var/backups"
-		else
-			cd $currentlocation
-			affiche_message "Erreur Curl" "Un erreur avec Curl est survenu"
+	#On cree un menu pour choisir le fichier et on recup le hash
+	$DIALOG --stdout --title "Telechargement backup" --menu "Hash et fichier" 0 0 0 $vartest > hash
+	if [ $? -eq 0 ]; then
+		affiche_saisie "Choisir nom pour votre backup" "Veuillez saisir le nom du backup que vous télécharger. Merci de ne pas ajouter l'extension .tar.gz"
+		if [ $retour -eq 0 ]; then
+			currentlocation=$PWD
+                	cd "/var/backups" #On stocke les fichiers dans le dossier de backup
+			curl --silent -o $saisie".tar.gz" https://daenerys.xplod.fr/backup/download.php?login=Cladt_Rath_Vincent\&hash=$hash
+			if [ $? -eq 0 ]; then
+				cd $currentlocation
+				affiche_message "Succès" "Votre backups a bien été télécharger. Retrouvez le dans /var/backups"
+			else
+				cd $currentlocation
+				affiche_message "Erreur..." "Un erreur est survenue, ce problème est peut être du a votre connexion internet ou au serveur distant."
+			fi
 		fi
 	else
-		cd $currentlocation
-		affiche_message "Erreur" "Vous n'avez pas entré de nom pour votre fichier"
+		affiche_message "Annulation" "L'opération a bien été annuler."
 	fi
 }
 

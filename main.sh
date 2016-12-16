@@ -175,6 +175,9 @@ case $option in
 	elif [ "$choix" == "Upload" ]; then
 		#On appel la fonction d'upload pour mettre un backup en ligne.
 		uploadBackup
+	elif [ "$choix" == "Télécharger" ]; then
+		#Appel de la fonction qui permet de télécharger des backups stocké en ligne.
+		downloadBackup
 	fi;;
 #Option Annuler
 1) 	affiche_message_exit "Au revoir.." "A bientôt sur notre programme de backup.\n\nRéalisé par :\nLaurene CLADT\nMatthieu VINCENT\nBenjamin RATH";;

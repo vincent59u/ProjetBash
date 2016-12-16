@@ -160,20 +160,3 @@ function affiche_saisie_init(){
         fi
 }
 
-######################################################################################################################################################
-#                               Fonction qui affiche la fenêtre de dialogue qui crée un menu                                                         #
-######################################################################################################################################################
-#Fonction qui permet de créer un menu dynamiquement. $1 correspond au titre de la fenêtre. $2 correspond a une description et $3 correspond à la liste des options
-#Accepte des strings du type "hashage" "nom du backup" \
-function affiche_menu(){
-	#Création d un fichier temporaire qui permet de stockage de l option choisi par l utilisateur
-	resultat=`tempfile 2>/dev/null` || resultat=/tmp/test$$
-	trap "rm -f $resultat" 0 1 2 5 15
-
-	menu=`$DIALOG --clear --title "$1" \ --menu "$2" "$3" 2> $resultat`
-	retour=$?
-	#Si l'utilisateur a appuyé sur annuler, on quitte la fonction de backup
-        if [ $retour -eq 1 ]; then
-            affiche_message "Annulation" "L'opération a bien été annulée"
-        fi
-}
