@@ -68,6 +68,9 @@ function downloadBackup(){
 	if [ $? -eq 0 ]; then
 		affiche_saisie "Choisir nom pour votre backup" "Veuillez saisir le nom du backup que vous télécharger. Merci de ne pas ajouter l'extension .tar.gz"
 		if [ $retour -eq 0 ]; then
+			if [[ $saisie =~ ".tar.gz"$ ]]; then
+    				saisie=${saisie::-7}
+			fi
 			currentlocation=$PWD
                 	cd "/var/backups" #On stocke les fichiers dans le dossier de backup
 			curl --silent -o $saisie".tar.gz" https://daenerys.xplod.fr/backup/download.php?login=Cladt_Rath_Vincent\&hash=$hash
