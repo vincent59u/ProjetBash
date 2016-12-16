@@ -12,7 +12,7 @@ function difference(){
 	#Modification de la variable IFS afin d'itérer sur chaque ligne du fichier temporaire.
 	IFS=$'\n'
 	#Regex qui permet de voir si un fichier est ajouté ou supprimé entre deux backups.
-	regex="^([>|<]{1})[ ]*([a-zA-Z0-9]+(\.[a-zA-Z]+)*)$"
+	regex="^([>|<]{1})[ ]*(.+(\.[a-zA-Z]+)*)$"
 	#On récupère la différence entre les deux backups placé en paramètre.
 	diff <(tar --show-transformed-names --strip-components=1 -tf $1 | sort) <(tar --show-transformed-names --strip-components=1 -tf $2 | sort) > tmp.txt
 	#on récupère dans une variable le résultat de la commande ci-dessus.
@@ -26,7 +26,7 @@ function difference(){
 		tabSuppr=()
 		tabAjout=()
 		#On boucle sur chaque ligne du fichier tmp.txt
-		for ligne in $resultat; do
+		for ligne in $(cat tmp.txt); do
 			#Si la ligne match avec la regex, cela veut dire quil y a un fichier qui a été supprimé ou ajouté.
 			if [[ "$ligne" =~ $regex ]]; then
 				#Si le fichier a été supprimé entre les deux backups, on l'indique à l utilisateur.
