@@ -22,7 +22,7 @@ function recupererSynopsis(){
 	if [ ! -d "$HOME/GoT" ]; then
 		mkdir "$HOME/GoT"
 	fi
-	#IFS permet de changer le séparateur pour ne prendre en compte que les retour à la ligne et #pas les espaces
+	#IFS permet de changer le séparateur pour ne prendre en compte que les retour à la ligne et pas les espaces
 	IFS=$'\n'
 	#La première regex sert à récupérer le fichier de tous les synopsis afin de boucler sur tous les détails de synopsis
 	regex="<a href=\"synopsis\.php\?s=([0-9]{1,2})\&amp;e=[0-9]{1,2}\">Episode ([0-9]{1,2}): (([A-Za-z,]+ {0,1})+)<\/a>"
@@ -38,7 +38,7 @@ function recupererSynopsis(){
 	#On supprime ensuite le fichier temporaire
 	rm public.key
 	#On récupère le chemin des fichiers à vérifier
-	#On récupère le nombre d'opérations à faire afin de pouvoir afficher une jolie barre de progression	(wc -l ne récupère pas le bon nombre)	
+	#On récupère le nombre d'opérations à faire afin de pouvoir afficher une jolie barre de progression
 	nbr=`n=0 && for i in $(cat synopsis.php); do let n+=1; done && echo $n`
 	#Pour chaque synopsis
 	(
@@ -70,7 +70,7 @@ function recupererSynopsis(){
 	        fi
 	#Code pour la jauge de progression sur la boite de dialogue
 	echo "XXX"
-	echo "Opération $(($n*100/$nbr))/100..." 
+	echo "Opération $n/$nbr..." 
 	echo "XXX"
 	echo $(($n*100/$nbr))
 	let n+=1

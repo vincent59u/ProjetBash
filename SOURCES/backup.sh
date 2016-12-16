@@ -46,7 +46,13 @@ function chiffMv(){
 function backup(){
 	chemin=$PWD
 	#Tout d'abord, on récupère les synopsis via daenerys.xplod.fr
-	recupererSynopsis
+	#Afin de gérer les erreurs de connexion, on teste le ping sur le site :
+	if ping -qc 1 daenerys.xplod.fr >&- 2>&-; then 
+		recupererSynopsis
+	else 
+		#si il n'y a pas de connexion, alors on ne récupère pas les synopsis
+		affiche_message_info "Erreur de connexion" "Impossible d'accèder à daenerys.xplod.fr ; Votre backup va être effectué mais les synopsis ne seront pas mis à jour."
+	fi
 	#Appel d'une fonction qui permet à l utilisateur de saisir un nom de dossier dans une boite de dialogue
     	affiche_saisie_backup "Saisir un nom de dossier" "Veulliez saisir le nom de dossier de votre backup. (Laissez vide pour /var/backups)"
 	#Si l'utilisateur à appuyer sur annuler ou echap.

@@ -7,8 +7,7 @@
 #######################################################################################################################################################
 #							Fonction qui permet d'envoyer un mail (erreur)						      #
 #######################################################################################################################################################
-#Fonction qui envoie un email à l utilisateur (accessible grace à la commande "mail"), avec le message d'erreur précisé en paramètre $1
-# ATTENTION : si l'utilisateur n a pas de connexion internet, alors le script peut se bloquer
+#Fonction qui envoie un email à l utilisateur (accessible grace à la commande "mail" si il a installé mailutils), avec le message d'erreur précisé en paramètre $1
 function errorEmail(){
 	#Ajoute le sujet du message
 	echo "Subject: Message d'erreur" > mail.txt
@@ -37,4 +36,3 @@ function connexionError(){
 	fi
 }
 
-#//TODO : toutes les erreurs de backup par email ?
