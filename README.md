@@ -1,5 +1,8 @@
 # ProjetBash
 
+![interface](https://cloud.githubusercontent.com/assets/18222418/21810002/5f9abe24-d74a-11e6-8622-ef7f42375ee7.png)
+
+
 Réalisation d’un programme de gestion automatique de backups, sécurisé, et permettant la récupération d’anciens fichiers, avec possibilité de récupérer des fichiers mis à jour depuis Internet de façon sécurisée, tolérant les erreurs.
 
 2016-2017
