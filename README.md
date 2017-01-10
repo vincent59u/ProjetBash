@@ -9,24 +9,24 @@ Réalisation d’un programme de gestion automatique de backups, sécurisé, et 
 
 # Fonctions du programme
 
-Fonctionnalité de backup 
+- Fonctionnalité de backup 
 
-Compression des backups
+- Compression des backups
 
-Chiffrement des backups 
+- Chiffrement des backups 
 
-Afficher les différences entre un backup A et B 
+- Afficher les différences entre un backup A et B 
 
-Accéder à un ancien fichier stocké dans un backup 
+- Accéder à un ancien fichier stocké dans un backup 
 
-Supprimer progressivement les anciens backups 
+- Supprimer progressivement les anciens backups 
 
-Récupérer les mises à jour depuis un site Internet non prévu à cet effet 
+- Récupérer les mises à jour depuis un site Internet non prévu à cet effet 
 
-Vérifier que les mises à jour soient valides 
+- Vérifier que les mises à jour soient valides 
 
-Gérer les erreurs de connexion
+- Gérer les erreurs de connexion
 
-Permettre l’upload de ses backups en ligne  
+- Permettre l’upload de ses backups en ligne  
 
-Possède une interface agréable à utiliser 
+- Possède une interface agréable à utiliser 
