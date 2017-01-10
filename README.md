@@ -30,3 +30,7 @@ Réalisation d’un programme de gestion automatique de backups, sécurisé, et 
 - Permettre l’upload de ses backups en ligne  
 
 - Possède une interface agréable à utiliser 
+
+# Installation
+
+Il suffit d'éxécuter `bash main.sh` et toutes les dépendences s'installent automatiquement
