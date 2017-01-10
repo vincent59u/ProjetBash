@@ -1,19 +1,29 @@
 # ProjetBash
+
 Réalisation d’un programme de gestion automatique de backups, sécurisé, et permettant la récupération d’anciens fichiers, avec possibilité de récupérer des fichiers mis à jour depuis Internet de façon sécurisée, tolérant les erreurs.
+
 2016-2017
 
-Fonctionnels actuellement : 
+# Fonctions du programme
 
-Faire des backups (sauvegardes) de ses fichiers personnels ;
+Fonctionnalité de backup 
 
-Compresser ces backups pour qu’ils prennent moins de place ;
+Compression des backups
 
-Chiffrement des backups;
+Chiffrement des backups 
 
-Supprimer progressivement les anciens backups;
+Afficher les différences entre un backup A et B 
 
-Récupérer les mises à jour depuis un site Internet non prévu à cet effet
+Accéder à un ancien fichier stocké dans un backup 
 
-Vérifier que les mises à jour soient valides
+Supprimer progressivement les anciens backups 
 
-Possède une interface agréable à utiliser
+Récupérer les mises à jour depuis un site Internet non prévu à cet effet 
+
+Vérifier que les mises à jour soient valides 
+
+Gérer les erreurs de connexion
+
+Permettre l’upload de ses backups en ligne  
+
+Possède une interface agréable à utiliser 
